@@ -1,17 +1,20 @@
 /* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Route, Redirect } from 'react-router-dom';
 
 import AuthLayout from '../pages/_layouts/auth';
 import DefaultLayout from '../pages/_layouts/default';
 
+import { store } from '../store';
+
 export default function RouteWrapper({
   component: Component,
-  isPrivate = false,
+  isPrivate,
   ...rest
 }) {
-  const signed = false;
+  const { signed } = store.getState().auth;
 
   if (!signed && isPrivate) {
     return <Redirect to="/" />;
@@ -21,15 +24,15 @@ export default function RouteWrapper({
     return <Redirect to="/main" />;
   }
 
-  const Layouts = signed ? DefaultLayout : AuthLayout;
+  const Layout = signed ? DefaultLayout : AuthLayout;
 
   return (
     <Route
       {...rest}
       render={(props) => (
-        <Layouts>
+        <Layout>
           <Component {...props} />
-        </Layouts>
+        </Layout>
       )}
     />
   );

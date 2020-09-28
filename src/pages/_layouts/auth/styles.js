@@ -1,11 +1,8 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
+  width: 100%;
   height: 100%;
-  background: #7159c1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: #eee;
+  overflow: auto;
 `;
-
-export const Content = styled.div``;
