@@ -5,5 +5,3 @@ export const Wrapper = styled.div`
   background: #eee;
   overflow: auto;
 `;
-
-export const Content = styled.div``;
