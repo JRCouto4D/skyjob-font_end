@@ -22,7 +22,7 @@ export const Container = styled.div`
 
     input {
       padding: 10px;
-
+      width: 100%;
       border: none;
       background: none;
       color: ${darken(0.1, '#cb0000')};
@@ -45,6 +45,12 @@ export const Container = styled.div`
       color: #fff;
       font-weight: bold;
       font-size: 16px;
+    }
+
+    span {
+      color: #f64c75;
+      align-self: flex-start;
+      position: absolute;
     }
   }
 `;
