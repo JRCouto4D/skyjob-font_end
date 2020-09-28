@@ -1,15 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Wrapper, Content } from './styles';
 
-function defaultLayout({ children }) {
+export default function authLayout({ children }) {
   return (
-    <>
-      <Wrapper>
-        <Content>{children}</Content>
-      </Wrapper>
-    </>
+    <Wrapper>
+      <Content>{children}</Content>
+    </Wrapper>
   );
 }
 
-export default defaultLayout;
+authLayout.propTypes = {
+  children: PropTypes.element.isRequired,
+};
