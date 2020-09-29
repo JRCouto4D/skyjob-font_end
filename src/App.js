@@ -6,10 +6,11 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import './config/ReactotronConfig';
 import { store, persistor } from './store';
+
 import GlobalStyle from './styles/global';
 
-import history from './services/history';
 import Routes from './routes';
+import history from './services/history';
 
 function App() {
   return (
