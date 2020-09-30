@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { darken } from 'polished';
 
 export const Container = styled.div`
   width: 100%;
@@ -12,6 +11,9 @@ export const Container = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
 
   div {
     display: flex;
@@ -44,13 +46,7 @@ export const Container = styled.div`
     align-items: center;
 
     :hover {
-      strong {
-        color: ${darken(0.1, '#ff1e40')};
-      }
-
-      svg {
-        color: ${darken(0.2, '#ff1e40')};
-      }
+      opacity: 0.6;
     }
 
     strong {
