@@ -5,3 +5,11 @@ export const Wrapper = styled.div`
   background: #eee;
   overflow: auto;
 `;
+
+export const Content = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
