@@ -30,19 +30,21 @@ function Header() {
   const [popup2, setPopup2] = useState(false);
 
   function togglePopUp(e) {
-    setPopup(!popup);
     setCoords({
       x: e.nativeEvent.clientX,
       y: e.nativeEvent.clientY,
     });
+    setPopup(!popup);
+    setPopup2(false);
   }
 
   function togglePopUp2(e) {
-    setPopup2(!popup2);
     setCoords({
       x: e.nativeEvent.clientX,
       y: e.nativeEvent.clientY,
     });
+    setPopup2(!popup2);
+    setPopup(false);
   }
 
   function close() {
