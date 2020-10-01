@@ -1,13 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { MdClear } from 'react-icons/md';
 
-import { Container } from './styles';
+import { Container, Modal, Content } from './styles';
 
 function Products() {
-  return (
-    <Container>
-      <h1>Products</h1>
-    </Container>
-  );
+  return <Container />;
 }
 
 export default Products;

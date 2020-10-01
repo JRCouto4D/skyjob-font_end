@@ -8,6 +8,7 @@ import Categories from '../pages/Catalog/Categories';
 import Customers from '../pages/Catalog/Customers';
 import Products from '../pages/Catalog/Products';
 import Providers from '../pages/Catalog/Providers';
+import NewItem from '../pages/Catalog/Products/NewItem';
 
 import Budgets from '../pages/Sales/Budgets';
 import PDV from '../pages/Sales/PDV';
@@ -22,6 +23,7 @@ export default function Routes() {
       <Route path="/categories" exact component={Categories} isPrivate />
       <Route path="/customers" exact component={Customers} isPrivate />
       <Route path="/products" exact component={Products} isPrivate />
+      <Route path="/products/newItem" exact component={NewItem} isPrivate />
       <Route path="/providers" exact component={Providers} isPrivate />
 
       <Route path="/budgets" exact component={Budgets} isPrivate />
