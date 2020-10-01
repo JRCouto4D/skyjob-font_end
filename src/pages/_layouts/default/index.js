@@ -5,16 +5,18 @@ import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import { Wrapper, Content } from './styles';
 
-export default function authLayout({ children }) {
+function deafultLayout({ children }) {
   return (
     <Wrapper>
       <Header />
-      <Content>{children}</Content>
       <Footer />
+      <Content>{children}</Content>
     </Wrapper>
   );
 }
 
-authLayout.propTypes = {
+export default deafultLayout;
+
+deafultLayout.propTypes = {
   children: PropTypes.element.isRequired,
 };
