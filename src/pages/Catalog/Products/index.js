@@ -243,7 +243,10 @@ function Products() {
                 name="search"
                 placeholder="O que voce está procurando"
                 autoCapitalize="none"
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setPage(1);
+                  setSearch(e.target.value);
+                }}
               />
             </BoxSearch>
             <BoxRight>
