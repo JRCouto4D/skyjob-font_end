@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Async from 'react-select/async';
+import Async from 'react-select';
 import { lighten } from 'polished';
 
 export const Container = styled.div``;
@@ -56,24 +56,33 @@ export const Content = styled.div`
   }
 
   main {
-    padding: 15px;
-  }
+    padding: 25px;
 
-  footer {
-    padding: 15px;
+    form {
+      div.box-top {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+      }
 
-    button {
-      width: 100%;
-      height: 45px;
-      background: #ab0000;
-      border: none;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 4px;
+      button.button-submit {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #ab0000;
+        border-radius: 4px;
+        border: none;
+        width: 100%;
+        height: 45px;
+        margin-top: 20px;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+
+        :hover {
+          opacity: 0.7;
+        }
+      }
     }
   }
 `;
@@ -121,22 +130,40 @@ export const ButtonActive = styled.button`
 export const BoxDescription = styled.div`
   display: flex;
   width: 100%;
-  flex-direction: row;
+  flex-direction: column;
   align-items: flex-start;
 
-  form {
-    margin-right: 25px;
-  }
-
-  > div {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
+  margin-left: 20px;
 `;
+
 export const InputBlock = styled.div`
   flex-direction: column;
   width: 100%;
+
+  strong {
+    font-size: 12px;
+    color: #333;
+  }
+
+  input {
+    display: flex;
+    width: 100%;
+    height: 35px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0 10px;
+    margin-top: 5px;
+
+    ::placeholder {
+      color: #ddd;
+    }
+  }
+`;
+
+export const InputBlockAmount = styled.div`
+  flex-direction: column;
+  width: 100%;
+  opacity: ${(props) => (props.active ? 0.5 : 1)};
 
   strong {
     font-size: 12px;
@@ -163,6 +190,7 @@ export const BlockSelect = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 25px;
+  width: 100%;
 `;
 
 export const Select = styled(Async).attrs({
@@ -287,6 +315,7 @@ export const InputBlockPrice = styled.div`
   strong {
     font-size: 18px;
     color: #333;
+    opacity: ${(props) => (props.active ? 0.3 : 1)};
   }
 
   input {
@@ -296,6 +325,11 @@ export const InputBlockPrice = styled.div`
     padding: 0 10px;
     margin-top: 5px;
     text-align: right;
+
+    :disabled {
+      opacity: 0.3;
+      color: #fff;
+    }
 
     ::placeholder {
       color: #ddd;
@@ -307,7 +341,7 @@ export const Profit = styled.div`
   margin-left: 20px;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   width: 90px;
 
   strong {
@@ -319,6 +353,8 @@ export const Profit = styled.div`
     font-size: 20px;
     color: #6fab1f;
     font-weight: bold;
+    margin-bottom: 2px;
+    margin-left: 2px;
   }
 `;
 
@@ -327,6 +363,7 @@ export const TextProfit = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
+  opacity: ${(props) => (props.active ? 0.3 : 1)};
 
   strong {
     font-size: 20px;
@@ -349,6 +386,10 @@ export const BlockAmount = styled.div`
 
   input {
     text-align: right;
+
+    :disabled {
+      opacity: 0.3;
+    }
   }
 `;
 
