@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -36,10 +36,6 @@ import {
 function Products() {
   const { company } = useSelector((state) => state.user.profile);
 
-  // const [providers, setProviders] = useState([]);
-  // const [units, setUnits] = useState([]);
-  // const [categories, setCategories] = useState([]);
-
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');
   const [prePage, setPrePage] = useState(0);
@@ -47,10 +43,7 @@ function Products() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  // const [modalView, setModalView] = useState(false);
-  // const [filters, setFilters] = useState([]);
-
-  async function loadProducts() {
+  const loadProducts = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -73,43 +66,11 @@ function Products() {
       );
       history.push('/main');
     }
-  }
-  /*
-  async function loadProviders() {
-    try {
-      const response = await api.get(`company/${company.id}/providers`);
-      setProviders(response.data.providers);
-    } catch (err) {
-      console.tron.log(err);
-      toast.error('Algo deu errado ao carregar os fornecedores');
-    }
-  }
-
-
-  async function loadCategories() {
-    try {
-      const response = await api.get(`company/${company.id}/categories`);
-      setCategories(response.data.categories);
-    } catch (err) {
-      console.tron.log(err);
-      toast.error('Algo deu errado ao carregar as Categorias');
-    }
-  }
-
-  async function loadUnits() {
-    try {
-      const response = await api.get(`company/${company.id}/units`);
-      setUnits(response.data.units);
-    } catch (err) {
-      console.tron.log(err);
-      toast.error('Algo deu errado ao carregar as unidades');
-    }
-  }
-  */
+  }, [page, search, company]);
 
   useEffect(() => {
     loadProducts();
-  }, [page, search]);
+  }, [loadProducts]);
 
   function nextPage() {
     setPrePage(Math.ceil(total / 5));
@@ -124,31 +85,34 @@ function Products() {
     loadProducts();
   }
 
-  function deleteProduct(id) {
-    confirmAlert({
-      title: 'Confirmar remoção',
-      message: 'Deseja remover este produto?',
-      buttons: [
-        {
-          label: 'Sim',
-          onClick: async () => {
-            try {
-              await api.delete(`company/${company.id}/products/${id}/delete`);
-              toast.success('O produto foi deletado com sucesso!');
-              loadProducts();
-            } catch (err) {
-              toast.error('Algo deu errado, por favor tente mais tarde');
-              history.push('/products');
-            }
+  const deleteProduct = useCallback(
+    async (id) => {
+      confirmAlert({
+        title: 'Confirmar remoção',
+        message: 'Deseja remover este produto?',
+        buttons: [
+          {
+            label: 'Sim',
+            onClick: async () => {
+              try {
+                await api.delete(`company/${company.id}/products/${id}/delete`);
+                toast.success('O produto foi deletado com sucesso!');
+                loadProducts();
+              } catch (err) {
+                toast.error('Algo deu errado, por favor tente mais tarde');
+                history.push('/products');
+              }
+            },
           },
-        },
-        {
-          label: 'Não',
-          onClick: () => history.push('/products'),
-        },
-      ],
-    });
-  }
+          {
+            label: 'Não',
+            onClick: () => history.push('/products'),
+          },
+        ],
+      });
+    },
+    [company, loadProducts]
+  );
 
   function handleFilter() {}
 
@@ -220,7 +184,7 @@ function Products() {
         })}
       </TableProducts>
     ),
-    [products]
+    [products, deleteProduct]
   );
 
   return (

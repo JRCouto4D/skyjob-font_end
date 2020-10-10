@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { MdClear, MdAdd } from 'react-icons/md';
@@ -195,22 +195,22 @@ function NewProduct({ location }) {
     setPopup(false);
   }
 
-  async function loadCategories() {
+  const loadCategories = useCallback(async () => {
     const response = await api.get(`/company/${company.id}/categories`);
     setCategories(response.data.categories);
-  }
+  }, [company]);
 
-  async function loadProviders() {
+  const loadProviders = useCallback(async () => {
     const response = await api.get(`/company/${company.id}/providers`);
 
     setProviders(response.data.providers);
-  }
+  }, [company]);
 
-  async function loadUnits() {
+  const loadUnits = useCallback(async () => {
     const response = await api.get(`/company/${company.id}/units`);
 
     setUnits(response.data.units);
-  }
+  }, [company]);
 
   useEffect(() => {
     loadCategories();
@@ -240,7 +240,7 @@ function NewProduct({ location }) {
         setFormated_wholesale(formatPrice(Number(item.wholesale_price)));
       }
     }
-  }, []);
+  }, [loadCategories, loadProviders, loadUnits, location]);
 
   async function handleInclude(data) {
     switch (includeType) {
