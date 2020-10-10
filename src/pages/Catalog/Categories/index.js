@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
@@ -44,7 +44,7 @@ function Categories() {
 
   function handleFilter() {}
 
-  async function loadCategories() {
+  const loadCategories = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -62,7 +62,11 @@ function Categories() {
       toast.error('Algo deu errado, por favor tentar mais tarde.');
       history.push('/main');
     }
-  }
+  }, [page, search, company]);
+
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
 
   function nextPage() {
     setPrePage(Math.ceil(total / 5));
@@ -73,38 +77,39 @@ function Categories() {
     setPage(page >= 2 ? page - 1 : page);
   }
 
-  async function deleteCategory(id) {
-    confirmAlert({
-      title: 'Confirmar remoção',
-      message: 'Deseja remover esta categoria?',
-      buttons: [
-        {
-          label: 'Sim',
-          onClick: async () => {
-            try {
-              await api.delete(`company/${company.id}/categories/${id}/delete`);
-              toast.success('A categoria foi deletada com sucesso!');
-              loadCategories();
-            } catch (err) {
-              toast.error('Algo deu errado, por favor tente mais tarde');
-              history.push('/categories');
-            }
+  const deleteCategory = useCallback(
+    async (id) => {
+      confirmAlert({
+        title: 'Confirmar remoção',
+        message: 'Deseja remover esta categoria?',
+        buttons: [
+          {
+            label: 'Sim',
+            onClick: async () => {
+              try {
+                await api.delete(
+                  `company/${company.id}/categories/${id}/delete`
+                );
+                toast.success('A categoria foi deletada com sucesso!');
+                loadCategories();
+              } catch (err) {
+                toast.error('Algo deu errado, por favor tente mais tarde');
+                history.push('/categories');
+              }
+            },
           },
-        },
-        {
-          label: 'Não',
-          onClick: () => history.push('/categories'),
-        },
-      ],
-    });
-  }
+          {
+            label: 'Não',
+            onClick: () => history.push('/categories'),
+          },
+        ],
+      });
+    },
+    [loadCategories, company]
+  );
 
-  useEffect(() => {
-    loadCategories();
-  }, [page, search]);
-
-  const memoList = useMemo(
-    () => (
+  const memoList = useMemo(() => {
+    return (
       <TableCategories>
         <li className="header">
           <strong>DESCRIÇÃO</strong>
@@ -112,30 +117,34 @@ function Categories() {
           <strong>AÇÕES</strong>
         </li>
 
-        {categories.map((item) => (
-          <LineTable>
-            <strong>{item.name}</strong>
-            <strong>{item.active ? 'SIM' : 'NÃO'}</strong>
-            <div className="box-actions">
-              <button
-                type="button"
-                onClick={() =>
-                  history.push('/categories/newCategory', { item })
-                }
-              >
-                <MdCreate color="#333" size={20} />
-              </button>
+        {categories.map((category) => {
+          return (
+            <LineTable>
+              <strong>{category.name}</strong>
+              <strong>{category.active ? 'SIM' : 'NÃO'}</strong>
+              <div className="box-actions">
+                <button
+                  type="button"
+                  onClick={() =>
+                    history.push('/categories/newCategory', { category })
+                  }
+                >
+                  <MdCreate color="#333" size={20} />
+                </button>
 
-              <button type="button" onClick={() => deleteCategory(item.id)}>
-                <MdDeleteForever color="#ab0000" size={20} />
-              </button>
-            </div>
-          </LineTable>
-        ))}
+                <button
+                  type="button"
+                  onClick={() => deleteCategory(category.id)}
+                >
+                  <MdDeleteForever color="#ab0000" size={20} />
+                </button>
+              </div>
+            </LineTable>
+          );
+        })}
       </TableCategories>
-    ),
-    [categories]
-  );
+    );
+  }, [categories, deleteCategory]);
 
   return (
     <Container>
@@ -157,7 +166,10 @@ function Categories() {
                 name="search"
                 placeholder="O que voce está procurando?"
                 autoCapitaliza="none"
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setPage(1);
+                  setSearch(e.target.value);
+                }}
               />
             </BoxSearch>
 
