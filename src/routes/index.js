@@ -5,11 +5,11 @@ import Route from './Route';
 import SignIn from '../pages/SignIn';
 import Main from '../pages/Main';
 import Categories from '../pages/Catalog/Categories';
-import NewCategory from '../pages/Catalog/Categories/NewCategory';
 import Customers from '../pages/Catalog/Customers';
 import Products from '../pages/Catalog/Products';
 import Providers from '../pages/Catalog/Providers';
 import NewProduct from '../pages/Catalog/Products/NewProduct';
+import NewCategory from '../pages/Catalog/Categories/NewCategory';
 
 import Budgets from '../pages/Sales/Budgets';
 import PDV from '../pages/Sales/PDV';
