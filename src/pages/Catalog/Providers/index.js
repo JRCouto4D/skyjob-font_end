@@ -93,7 +93,7 @@ function Providers() {
         ],
       });
     },
-    [loadProviders]
+    [loadProviders, company]
   );
 
   useEffect(() => {
