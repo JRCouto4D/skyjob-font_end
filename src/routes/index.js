@@ -14,6 +14,7 @@ import NewProviders from '../pages/Catalog/Providers/NewProviders';
 
 import Budgets from '../pages/Sales/Budgets';
 import PDV from '../pages/Sales/PDV';
+import Selling from '../pages/Sales/PDV/Selling';
 import Returns from '../pages/Sales/Returns';
 
 export default function Routes() {
@@ -42,6 +43,7 @@ export default function Routes() {
 
       <Route path="/budgets" exact component={Budgets} isPrivate />
       <Route path="/pdv" exact component={PDV} isPrivate />
+      <Route path="/pdv/selling" exact component={Selling} isPrivate />
       <Route path="/returns" exact component={Returns} isPrivate />
     </Switch>
   );
