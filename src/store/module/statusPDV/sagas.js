@@ -16,11 +16,7 @@ export function* openPDV({ payload }) {
       initial_value,
     });
 
-    const data = {
-      id: response.data.id,
-    };
-
-    yield put(openPdvSuccess(data));
+    yield put(openPdvSuccess(response.data));
   } catch (err) {
     toast.error(`Algo deu errado: ${err}`);
     yield put(openPdvFailure());

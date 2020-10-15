@@ -1,7 +1,7 @@
 import produce from 'immer';
 
 const INITIAL_STATE = {
-  cash_id: null,
+  pdv: null,
   open: false,
   loading: false,
 };
@@ -15,14 +15,14 @@ export default function statusPDV(state = INITIAL_STATE, action) {
       }
 
       case '@statusPDV/OPEN_PDV_SUCCESS': {
-        draft.cash_id = action.payload.data.id;
+        draft.pdv = action.payload.data;
         draft.open = true;
         draft.loading = false;
         break;
       }
 
       case '@statusPDV/OPEN_PDV_FAILURE': {
-        draft.cash_id = null;
+        draft.pdv = null;
         draft.open = false;
         draft.loading = false;
         break;
