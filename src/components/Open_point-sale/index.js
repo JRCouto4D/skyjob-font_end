@@ -1,15 +1,21 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { MdClear, MdForward } from 'react-icons/md';
+import { FaSpinner } from 'react-icons/fa';
 import { Form, Input } from '@rocketseat/unform';
+import { toast } from 'react-toastify';
+
+import { openPdvRequest } from '../../store/module/statusPDV/actions';
 
 import history from '../../services/history';
 import api from '../../services/api';
 
-import { Container, Modal, Content, Select } from './styles';
+import { Container, Modal, Content, Select, Loading } from './styles';
 
 function OpenPointSale() {
   const { company } = useSelector((state) => state.user.profile);
+  const { loading } = useSelector((state) => state.statusPDV);
+  const dispatch = useDispatch();
 
   const [cashs, setCashs] = useState([]);
   const [selectedCach, setSelectedCach] = useState(0);
@@ -34,7 +40,28 @@ function OpenPointSale() {
   }, [loadCashs, loadUsers]);
 
   async function handleSubmit(data) {
-    console.tron.log(data, selectedCach.id, selectedUser.id);
+    if (selectedCach === 0) {
+      toast.error('Selecione o caixa registrador');
+      return;
+    }
+
+    if (selectedUser === 0) {
+      toast.error('Selecione o vendedor');
+      return;
+    }
+
+    if (data.initial_value === '') {
+      toast.error('O valor em caixa é obrigatprio');
+      return;
+    }
+
+    const dataValue = {
+      user_id: selectedUser.id,
+      cash_register_id: selectedCach.id,
+      initial_value: data.initial_value,
+    };
+
+    dispatch(openPdvRequest(dataValue));
   }
 
   return (
@@ -98,8 +125,16 @@ function OpenPointSale() {
               </div>
 
               <button type="submit">
-                <MdForward color="#fff" size={45} />
-                <strong>CONFIRMAR ABERTURA</strong>
+                {loading ? (
+                  <Loading>
+                    <FaSpinner color="#ab0000" size={30} />
+                  </Loading>
+                ) : (
+                  <>
+                    <MdForward color="#fff" size={45} />
+                    <strong>CONFIRMAR ABERTURA</strong>
+                  </>
+                )}
               </button>
             </Form>
           </main>

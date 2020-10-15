@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Async from 'react-select';
 
 export const Container = styled.div``;
@@ -123,3 +123,24 @@ export const Select = styled(Async).attrs({
     }),
   },
 })``;
+
+const rotate = keyframes`
+  from{
+    transform: rotate(0deg)
+  }
+  to{
+    transform: rotate(360deg)
+  }
+`;
+
+export const Loading = styled.div`
+  width: 100%;
+  height: 300px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    animation: ${rotate} 1s linear infinite;
+  }
+`;
