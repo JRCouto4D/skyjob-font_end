@@ -26,7 +26,7 @@ export const BoxLeft = styled.div`
 
   img {
     width: 140px;
-    margin-top: 5px;
+    margin: 5px;
   }
 
   div.box-date {
@@ -114,6 +114,6 @@ export const GoOperations = styled(Link)`
 `;
 
 export const BoxRight = styled.div`
-  width: calc(100% - 200px);
+  width: 100%;
   height: 100%;
 `;
