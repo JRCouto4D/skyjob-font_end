@@ -1,11 +1,69 @@
+/* eslint-disable no-nested-ternary */
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { MdDeleteForever, MdCreate, MdForward, MdReply } from 'react-icons/md';
+import { FaSpinner } from 'react-icons/fa';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
-import { Container, ButttonGoPayment } from './styles';
+import { formatPrice } from '../../util/format';
+
+import {
+  resetDataSale,
+  removeToItemRequest,
+} from '../../store/module/sale/actions';
+
+import api from '../../services/api';
+
+import { Container, ButttonGoPayment, Loading } from './styles';
 
 function BoxItensSale({ button }) {
-  const itens = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const { dataSale, itens } = useSelector((state) => state.saleData);
+  const { company } = useSelector((state) => state.user.profile);
+  const dispatch = useDispatch();
+
+  async function deleteToItem(id) {
+    confirmAlert({
+      title: 'REMOVER ITEM',
+      message: '  DESEJA REALMENTE REMOVER ESTE ITEM?',
+      buttons: [
+        {
+          label: 'SIM',
+          onClick: () => {
+            dispatch(removeToItemRequest(id));
+          },
+        },
+        {
+          label: 'NÃO',
+          onClick: () => {},
+        },
+      ],
+    });
+  }
+
+  async function deleteSale() {
+    confirmAlert({
+      title: 'Cancelar Venda',
+      message: 'Deseja realmente cancelar esta venda?',
+      buttons: [
+        {
+          label: 'Sim',
+          onClick: async () => {
+            await api.delete(
+              `company/${company.id}/point_sales/${dataSale.point_sale_id}`
+            );
+
+            dispatch(resetDataSale());
+          },
+        },
+        {
+          label: 'Não',
+          onClick: () => {},
+        },
+      ],
+    });
+  }
 
   return (
     <Container>
@@ -13,41 +71,77 @@ function BoxItensSale({ button }) {
         <header>
           <div className="header-box-left">
             <strong>VENDA:</strong>
-            <span>#123456</span>
+            <span>{dataSale ? `#${dataSale.id}` : ''}</span>
           </div>
 
-          <button type="button">
+          <button type="button" onClick={deleteSale}>
             <MdDeleteForever size={25} color="#f0f0f0" />
           </button>
         </header>
 
-        <main>
-          <ul>
-            {itens.map(() => (
-              <li>
-                <div className="box-item-description">
-                  <span>2x #1213312312312</span>
-                  <strong>MASS TITANIUM 17500 3kg - MORANGO</strong>
-                </div>
+        {itens.loading ? (
+          <Loading>
+            <FaSpinner color="#ab0000" size={20} />
+          </Loading>
+        ) : (
+          <main>
+            <ul>
+              {itens.dataItem.length >= 1 &&
+                itens.dataItem.map((item) => (
+                  <li>
+                    <div className="box-item-description">
+                      <span>
+                        {item.amount && item.product
+                          ? `${item.amount}X  #${item.product.id}`
+                          : ''}
+                      </span>
 
-                <div className="box-item-price">
-                  <span>R$70,00</span>
-                  <strong>R$140,00</strong>
-                </div>
+                      <div>
+                        <strong>
+                          {item.product
+                            ? item.product.description.length > 22
+                              ? `${item.product.description
+                                  .toUpperCase()
+                                  .substr(0, 22)}...`
+                              : item.product.description.toUpperCase()
+                            : ''}
+                        </strong>
 
-                <div className="box-item-actions">
-                  <button type="button">
-                    <MdCreate size={20} color="#333" />
-                  </button>
+                        <span>
+                          {item.discount ? `${item.discount}% DESC` : ''}
+                        </span>
+                      </div>
+                    </div>
 
-                  <button type="button">
-                    <MdDeleteForever size={20} color="#ff0f0f" />
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </main>
+                    <div className="box-item-price">
+                      <span>
+                        {item.product
+                          ? formatPrice(item.product.retail_price)
+                          : 'R$0,00'}
+                      </span>
+
+                      <strong>
+                        {item.total ? formatPrice(item.total) : 'R$0,00'}
+                      </strong>
+                    </div>
+
+                    <div className="box-item-actions">
+                      <button type="button">
+                        <MdCreate size={20} color="#333" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => deleteToItem(item.id)}
+                      >
+                        <MdDeleteForever size={20} color="#ff0f0f" />
+                      </button>
+                    </div>
+                  </li>
+                ))}
+            </ul>
+          </main>
+        )}
       </div>
 
       <footer>

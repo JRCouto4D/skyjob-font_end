@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { darken } from 'polished';
 
 export const Container = styled.div`
@@ -70,9 +70,16 @@ export const Container = styled.div`
             color: #666;
           }
 
-          strong {
-            font-size: 10.5px;
-            color: #333;
+          div {
+            strong {
+              font-size: 10.5px;
+              color: #333;
+            }
+
+            span {
+              color: #999;
+              margin-left: 10px;
+            }
           }
         }
 
@@ -178,5 +185,28 @@ export const ButttonGoPayment = styled.button`
     font-size: ${(props) => `${props.fontSize}px`};
     color: #fff;
     margin-left: 10px;
+  }
+`;
+
+const rotate = keyframes`
+  from{
+    transform: rotate(0deg)
+  }
+
+  to{
+    transform: rotate(360deg)
+  }
+`;
+
+export const Loading = styled.div`
+  width: 100%;
+  height: 300px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    animation: ${rotate} 1s linear infinite;
   }
 `;
