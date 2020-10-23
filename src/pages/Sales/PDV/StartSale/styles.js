@@ -24,10 +24,11 @@ export const Container = styled.div`
     }
   }
 
-  a {
+  button {
     margin-top: 40px;
 
     background: #ab0000;
+    border: none;
     border-radius: 4px;
     font-size: 60px;
     color: #fff;

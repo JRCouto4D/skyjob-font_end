@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const Container = styled.div`
   width: 100%;
@@ -106,14 +106,14 @@ export const ProductTable = styled.ul`
 
   li.header {
     display: grid;
-    grid-template-columns: 4fr 1fr 2fr 2fr 1fr;
+    grid-template-columns: 4fr 1fr 2fr 2fr 1fr 1fr;
     grid-column-gap: 15px;
     padding: 10px 4px;
     border-bottom: none;
     background: #ddd;
 
     strong {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: bold;
       color: #333;
     }
@@ -131,7 +131,7 @@ export const LineTableProducts = styled.li`
 
     div {
       display: grid;
-      grid-template-columns: 4fr 1fr 2fr 2fr 1fr;
+      grid-template-columns: 4fr 1fr 2fr 2fr 1fr 1fr;
       grid-column-gap: 15px;
       padding: 10px 4px;
       border-bottom: 1px solid #ddd;
@@ -139,7 +139,7 @@ export const LineTableProducts = styled.li`
       cursor: default;
 
       strong {
-        font-size: 12px;
+        font-size: 11px;
         font-weight: normal;
         color: #666;
       }
@@ -211,6 +211,29 @@ export const BoxFooter = styled.div`
         }
       }
     }
+  }
+`;
+
+const rotate = keyframes`
+  from{
+    transform: rotate(0deg)
+  }
+
+  to{
+    transform: rotate(360deg)
+  }
+`;
+
+export const Loading = styled.div`
+  width: 100%;
+  height: 300px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    animation: ${rotate} 1s linear infinite;
   }
 `;
 
