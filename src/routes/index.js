@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Switch } from 'react-router-dom';
 import Route from './Route';
 
@@ -18,6 +19,8 @@ import Selling from '../pages/Sales/PDV/Selling';
 import Returns from '../pages/Sales/Returns';
 
 export default function Routes() {
+  const { dataSale } = useSelector((state) => state.saleData);
+
   return (
     <Switch>
       <Route path="/" exact component={SignIn} />
@@ -42,8 +45,12 @@ export default function Routes() {
       />
 
       <Route path="/budgets" exact component={Budgets} isPrivate />
-      <Route path="/pdv" exact component={PDV} isPrivate />
-      <Route path="/pdv/selling" exact component={Selling} isPrivate />
+      <Route
+        path="/pdv"
+        exact
+        component={dataSale === null ? PDV : Selling}
+        isPrivate
+      />
       <Route path="/returns" exact component={Returns} isPrivate />
     </Switch>
   );
