@@ -199,6 +199,7 @@ function Selling() {
       product_id: selectedProduct.id,
       amount: data.amount,
       discount: data.discount === '' ? 0 : data.discount,
+      subtotal: selectedProduct.retail_price * data.amount,
     };
 
     dispatch(addToItemRequest(dataItem));
