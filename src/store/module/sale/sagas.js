@@ -7,6 +7,8 @@ import {
   addToItemFailure,
   removeToItemSuccess,
   removeToItemFailure,
+  editToItemSuccess,
+  editToItemFailure,
 } from './actions';
 
 import api from '../../../services/api';
@@ -29,7 +31,7 @@ export function* startSale({ payload }) {
 
 export function* addToItem({ payload }) {
   try {
-    const { sale_id, product_id, amount, discount } = payload.data;
+    const { sale_id, product_id, amount, discount, subtotal } = payload.data;
 
     const response = yield call(
       api.post,
@@ -43,7 +45,7 @@ export function* addToItem({ payload }) {
     const { item, sale, product } = response.data;
 
     const data = {
-      dataItem: { ...item, product },
+      dataItem: { ...item, product, subtotal },
       saleTotal: sale.total,
     };
 
@@ -67,8 +69,25 @@ export function* removeToItem({ payload }) {
   }
 }
 
+export function* editToItem({ payload }) {
+  try {
+    const { item_id, amount, discount } = payload.data;
+
+    const response = yield call(api.put, `/updateItem/${item_id}`, {
+      amount,
+      discount,
+    });
+
+    yield put(editToItemSuccess(response.data));
+  } catch (err) {
+    toast.error(`ALGO DEU ERRADO E O ITEM NÃO FOI EDITADO.\n ##${err}`);
+    yield put(editToItemFailure());
+  }
+}
+
 export default all([
   takeLatest('@sale/START_SALE_REQUEST', startSale),
   takeLatest('@sale/ADD_TO_ITEM_REQUEST', addToItem),
   takeLatest('@sale/REMOVE_TO_ITEM_REQUEST', removeToItem),
+  takeLatest('@sale/EDIT_TO_ITEM_REQUEST', editToItem),
 ]);

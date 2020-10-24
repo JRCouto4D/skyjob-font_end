@@ -40,6 +40,26 @@ export function removeToItemSuccess(item_id) {
   };
 }
 
+export function editToItemRequest(data) {
+  return {
+    type: '@sale/EDIT_TO_ITEM_REQUEST',
+    payload: { data },
+  };
+}
+
+export function editToItemSuccess(data) {
+  return {
+    type: '@sale/EDIT_TO_ITEM_SUCCESS',
+    payload: { data },
+  };
+}
+
+export function editToItemFailure() {
+  return {
+    type: '@sale/EDIT_TO_ITEM_FAILURE',
+  };
+}
+
 export function resetDataSale() {
   return {
     type: '@sale/RESET_DATA_SALE',

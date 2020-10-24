@@ -6,7 +6,7 @@ const INITIAL_STATE = {
   itens: {
     dataItem: [],
     loading: false,
-    subtotal: null,
+    subtotal: 0,
   },
 };
 
@@ -37,11 +37,8 @@ export default function sale(state = INITIAL_STATE, action) {
       case '@sale/ADD_TO_ITEM_SUCCESS': {
         draft.dataSale.total = action.payload.data.saleTotal;
         draft.itens.dataItem.push(action.payload.data.dataItem);
-        const subtotal = state.itens.dataItem.map((item) => item.total);
-        draft.itens.subtotal = subtotal.reduce(
-          (accumulator, currentValue) => accumulator + currentValue,
-          0
-        );
+        draft.itens.subtotal =
+          state.itens.subtotal + action.payload.data.dataItem.subtotal;
         draft.itens.loading = false;
         break;
       }
@@ -58,6 +55,10 @@ export default function sale(state = INITIAL_STATE, action) {
         );
 
         if (itemIndex >= 0) {
+          draft.itens.subtotal =
+            state.itens.subtotal - state.itens.dataItem[itemIndex].total;
+          draft.dataSale.total =
+            state.dataSale.total - state.itens.dataItem[itemIndex].total;
           draft.itens.dataItem.splice(itemIndex, 1);
         }
 
@@ -70,13 +71,48 @@ export default function sale(state = INITIAL_STATE, action) {
         draft.itens = {
           dataItem: [],
           loading: false,
-          subtotal: null,
+          subtotal: 0,
         };
         draft.loading = false;
         break;
       }
 
       case '@sale/REMOVE_TO_ITEM_FAILURE': {
+        draft.itens.loading = false;
+        break;
+      }
+
+      case '@sale/EDIT_TO_ITEM_REQUEST': {
+        draft.itens.loading = true;
+        break;
+      }
+
+      case '@sale/EDIT_TO_ITEM_SUCCESS': {
+        const { item, sale: dataSale } = action.payload.data;
+
+        const itemIndex = state.itens.dataItem.findIndex(
+          (itm) => itm.id === item.id
+        );
+
+        if (itemIndex >= 0) {
+          const { dataItem } = draft.itens;
+          dataItem[itemIndex].amount = item.amount;
+          dataItem[itemIndex].discount = item.discount;
+          dataItem[itemIndex].total = item.total;
+          draft.dataSale.total = dataSale.total;
+          dataItem[itemIndex].subtotal =
+            state.itens.dataItem[itemIndex].product.retail_price * item.amount;
+          draft.itens.subtotal =
+            state.itens.subtotal -
+            state.itens.dataItem[itemIndex].product.retail_price *
+              state.itens.dataItem[itemIndex].amount +
+            state.itens.dataItem[itemIndex].product.retail_price * item.amount;
+          draft.itens.loading = false;
+        }
+        break;
+      }
+
+      case '@sale/EDIT_TO_ITEM_FAILURE': {
         draft.itens.loading = false;
         break;
       }
