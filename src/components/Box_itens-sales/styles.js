@@ -86,6 +86,7 @@ export const Container = styled.div`
         div.box-item-price {
           display: flex;
           flex-direction: column;
+          align-items: flex-end;
 
           span {
             font-size: 10px;
