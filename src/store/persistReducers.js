@@ -7,7 +7,7 @@ export default (reducers) => {
     {
       key: 'skyjob',
       storage,
-      whitelist: ['auth', 'user'],
+      whitelist: ['auth', 'user', 'statusPDV', 'saleData'],
     },
     reducers
   );
