@@ -56,7 +56,9 @@ export default function sale(state = INITIAL_STATE, action) {
 
         if (itemIndex >= 0) {
           draft.itens.subtotal =
-            state.itens.subtotal - state.itens.dataItem[itemIndex].total;
+            state.itens.subtotal -
+            state.itens.dataItem[itemIndex].product.retail_price *
+              state.itens.dataItem[itemIndex].amount;
           draft.dataSale.total =
             state.dataSale.total - state.itens.dataItem[itemIndex].total;
           draft.itens.dataItem.splice(itemIndex, 1);
