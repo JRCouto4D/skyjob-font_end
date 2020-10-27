@@ -10,6 +10,7 @@ import BoxPDV from '../../../../components/Box_point-sale';
 import BoxItensSale from '../../../../components/Box_itens-sales';
 
 import api from '../../../../services/api';
+import history from '../../../../services/history';
 
 import { addToItemRequest } from '../../../../store/module/sale/actions';
 
@@ -37,7 +38,7 @@ function Selling() {
   const [loading, setLoading] = useState(false);
 
   const { company } = useSelector((state) => state.user.profile);
-  const { dataSale } = useSelector((state) => state.saleData);
+  const { dataSale, itens } = useSelector((state) => state.saleData);
   const dispatch = useDispatch();
 
   function handleOptionSearch1() {
@@ -208,6 +209,14 @@ function Selling() {
     setSearch('');
   }
 
+  function handleGoPayment() {
+    if (dataSale && dataSale.total !== 0 && itens.dataItem.length >= 1) {
+      history.push('/pdv/payment');
+    } else {
+      toast.error('Nenhum item foi incluido na venda');
+    }
+  }
+
   return (
     <BoxPDV poup>
       <Container>
@@ -331,7 +340,12 @@ function Selling() {
         </BoxLeft>
 
         <BoxRight>
-          <BoxItensSale button={0} />
+          <BoxItensSale
+            button={0}
+            functionButton={() => {
+              handleGoPayment();
+            }}
+          />
         </BoxRight>
       </Container>
     </BoxPDV>
