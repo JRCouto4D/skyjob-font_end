@@ -17,6 +17,7 @@ import Budgets from '../pages/Sales/Budgets';
 import PDV from '../pages/Sales/PDV';
 import Selling from '../pages/Sales/PDV/Selling';
 import Returns from '../pages/Sales/Returns';
+import Payment from '../pages/Sales/PDV/Payment';
 
 export default function Routes() {
   const { dataSale } = useSelector((state) => state.saleData);
@@ -51,6 +52,7 @@ export default function Routes() {
         component={dataSale === null ? PDV : Selling}
         isPrivate
       />
+      <Route path="/pdv/payment" exact component={Payment} isPrivate />
       <Route path="/returns" exact component={Returns} isPrivate />
     </Switch>
   );
