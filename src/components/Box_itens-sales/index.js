@@ -22,7 +22,7 @@ import api from '../../services/api';
 
 import { Container, ButttonGoPayment, Loading } from './styles';
 
-function BoxItensSale({ button }) {
+function BoxItensSale({ button, functionButton }) {
   const { dataSale, itens } = useSelector((state) => state.saleData);
   const { company } = useSelector((state) => state.user.profile);
   const dispatch = useDispatch();
@@ -182,12 +182,22 @@ function BoxItensSale({ button }) {
         </div>
 
         {button === 0 ? (
-          <ButttonGoPayment type="button" color="#8bc53d" fontSize={25}>
+          <ButttonGoPayment
+            type="button"
+            color="#8bc53d"
+            fontSize={25}
+            onClick={functionButton}
+          >
             <MdForward size={40} color="#fff" />
             <strong>RECEBER COMPRA</strong>
           </ButttonGoPayment>
         ) : (
-          <ButttonGoPayment type="button" color="#00bfdd" fontSize={18}>
+          <ButttonGoPayment
+            type="button"
+            color="#00bfdd"
+            fontSize={18}
+            onClick={functionButton}
+          >
             <MdReply size={40} color="#fff" />
             <strong>CONTINUAR COMPRANDO</strong>
           </ButttonGoPayment>
@@ -208,8 +218,10 @@ export default BoxItensSale;
 
 BoxItensSale.propTypes = {
   button: PropTypes.number,
+  functionButton: PropTypes.func,
 };
 
 BoxItensSale.defaultProps = {
   button: 0,
+  functionButton: () => {},
 };
