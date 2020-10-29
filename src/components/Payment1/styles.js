@@ -31,11 +31,13 @@ export const Container = styled.div`
         font-size: 30px;
         font-weight: bold;
         color: #666;
+        padding-right: ${(props) => (props.inputFucus ? '0px' : '10px')};
       }
 
       input#change {
         border: 1px solid #eee;
         color: #ccc;
+        padding-right: 10px;
 
         ::placeholder {
           color: #f0f0f0;
