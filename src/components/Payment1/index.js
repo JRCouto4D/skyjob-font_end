@@ -10,7 +10,9 @@ import { formatPrice } from '../../util/format';
 import { Container } from './styles';
 
 function Payment1() {
-  const { total } = useSelector((state) => state.saleData.dataSale);
+  const total = useSelector((state) =>
+    state.saleData.dataSale ? state.saleData.dataSale.total : 0
+  );
 
   const [output, setOutput] = useState(formatPrice(total) || formatPrice(0));
   const [change, setChange] = useState('R$0,00');
