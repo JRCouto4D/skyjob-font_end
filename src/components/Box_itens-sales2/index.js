@@ -114,7 +114,7 @@ function BoxItensSale() {
             <div className="label-block">
               <strong>DESCONTO:</strong>
               <span>
-                {dataSale.total
+                {dataSale
                   ? `${percentage2(itens.subtotal, dataSale.total)}%`
                   : '0.00%'}
               </span>
