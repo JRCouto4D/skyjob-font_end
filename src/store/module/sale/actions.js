@@ -12,6 +12,37 @@ export function startSaleSuccess(data) {
   };
 }
 
+export function startSaleFailure() {
+  return {
+    type: '@sale/START_SALE_FAILURE',
+  };
+}
+
+export function completeToSaleRequest(data) {
+  return {
+    type: '@sale/COMPLETE_TO_SALE_REQUEST',
+    payload: { data },
+  };
+}
+
+export function completeToSaleSuccess() {
+  return {
+    type: '@sale/COMPLETE_TO_SALE_SUCCESS',
+  };
+}
+
+export function completeToSaleFailure() {
+  return {
+    type: '@sale/COMPLETE_TO_SALE_FAILURE',
+  };
+}
+
+export function resetDataSale() {
+  return {
+    type: '@sale/RESET_DATA_SALE',
+  };
+}
+
 export function addToItemRequest(data) {
   return {
     type: '@sale/ADD_TO_ITEM_REQUEST',
@@ -57,18 +88,6 @@ export function editToItemSuccess(data) {
 export function editToItemFailure() {
   return {
     type: '@sale/EDIT_TO_ITEM_FAILURE',
-  };
-}
-
-export function resetDataSale() {
-  return {
-    type: '@sale/RESET_DATA_SALE',
-  };
-}
-
-export function startSaleFailure() {
-  return {
-    type: '@sale/START_SALE_FAILURE',
   };
 }
 

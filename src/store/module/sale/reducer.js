@@ -118,6 +118,26 @@ export default function sale(state = INITIAL_STATE, action) {
         draft.itens.loading = false;
         break;
       }
+
+      case '@sale/COMPLETE_TO_SALE_REQUEST': {
+        draft.loading = true;
+        break;
+      }
+
+      case '@sale/COMPLETE_TO_SALE_SUCCESS': {
+        draft.dataSale = null;
+        draft.itens = {
+          dataItem: [],
+          loading: false,
+          subtotal: 0,
+        };
+        draft.loading = false;
+        break;
+      }
+      case '@sale/COMPLETE_TO_SALE_FAILURE': {
+        draft.loading = false;
+        break;
+      }
       default:
     }
   });

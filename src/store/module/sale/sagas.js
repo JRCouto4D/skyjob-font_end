@@ -9,10 +9,12 @@ import {
   removeToItemFailure,
   editToItemSuccess,
   editToItemFailure,
+  completeToSaleSuccess,
+  completeToSaleFailure,
 } from './actions';
 
 import api from '../../../services/api';
-// import history from '../../../services/history';
+import history from '../../../services/history';
 
 export function* startSale({ payload }) {
   try {
@@ -85,9 +87,32 @@ export function* editToItem({ payload }) {
   }
 }
 
+export function* completeToSale({ payload }) {
+  try {
+    const { payment, sale_id, installments } = payload.data;
+
+    if (payment === 2) {
+      yield call(api.put, `/sale/${sale_id}/complete`, {
+        payment,
+        installments,
+      });
+    } else {
+      yield call(api.put, `/sale/${sale_id}/complete`, { payment });
+    }
+
+    yield put(completeToSaleSuccess());
+    history.push('/pdv');
+    toast.success('A VENDA FOI COMPLETA COM SUCESSO!');
+  } catch (erro) {
+    toast.error('ALGO DEU ERRADO E NÃO FOI POSSÍVEL COMPLETAR A VENDA');
+    yield put(completeToSaleFailure());
+  }
+}
+
 export default all([
   takeLatest('@sale/START_SALE_REQUEST', startSale),
   takeLatest('@sale/ADD_TO_ITEM_REQUEST', addToItem),
   takeLatest('@sale/REMOVE_TO_ITEM_REQUEST', removeToItem),
   takeLatest('@sale/EDIT_TO_ITEM_REQUEST', editToItem),
+  takeLatest('@sale/COMPLETE_TO_SALE_REQUEST', completeToSale),
 ]);
