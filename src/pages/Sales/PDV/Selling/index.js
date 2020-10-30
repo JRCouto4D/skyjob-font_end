@@ -69,7 +69,7 @@ function Selling() {
     if (search !== '') {
       loadProducts();
     }
-  }, [loadProducts]);
+  }, [search, loadProducts]);
 
   const tableMemoProducts = useMemo(() => {
     return (
