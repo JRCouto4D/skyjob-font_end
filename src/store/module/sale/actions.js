@@ -102,3 +102,10 @@ export function removeToItemFailure() {
     type: '@sale/REMOVE_TO_ITEM_FAILURE',
   };
 }
+
+export function setInstallments(data) {
+  return {
+    type: '@sale/SET_INSTALLMENTS',
+    payload: { data },
+  };
+}

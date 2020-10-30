@@ -33,6 +33,7 @@ function BoxItensSale() {
             );
 
             dispatch(resetDataSale());
+            history.push('/pdv');
           },
         },
         {
@@ -134,7 +135,7 @@ function BoxItensSale() {
           onClick={() => history.goBack()}
         >
           <MdReply size={40} color="#fff" />
-          <strong>CONTINUAR COMPRANDO</strong>
+          <strong>CONTINUAR VENDENDO</strong>
         </ButttonGoPayment>
       </footer>
     </Container>

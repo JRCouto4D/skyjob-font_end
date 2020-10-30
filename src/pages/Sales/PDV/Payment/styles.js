@@ -100,12 +100,6 @@ export const PaymentSelect = styled(Async).attrs({
   margin-top: 5px;
 `;
 
-export const Payment1 = styled.div``;
-
-export const Payment2 = styled.div``;
-
-export const Payment3 = styled.div``;
-
 export const Footer = styled.div`
   width: 100%;
 

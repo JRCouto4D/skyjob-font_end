@@ -8,6 +8,7 @@ const INITIAL_STATE = {
     loading: false,
     subtotal: 0,
   },
+  installments: null,
 };
 
 export default function sale(state = INITIAL_STATE, action) {
@@ -76,6 +77,7 @@ export default function sale(state = INITIAL_STATE, action) {
           subtotal: 0,
         };
         draft.loading = false;
+        draft.installments = null;
         break;
       }
 
@@ -131,11 +133,17 @@ export default function sale(state = INITIAL_STATE, action) {
           loading: false,
           subtotal: 0,
         };
+        draft.installments = null;
         draft.loading = false;
         break;
       }
       case '@sale/COMPLETE_TO_SALE_FAILURE': {
         draft.loading = false;
+        break;
+      }
+
+      case '@sale/SET_INSTALLMENTS': {
+        draft.installments = action.payload.data;
         break;
       }
       default:
