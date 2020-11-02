@@ -183,7 +183,7 @@ function Payment() {
       );
     }
     return this;
-  }, [selectedPayment, installments]);
+  }, [selectedPayment, installments, dataSale]);
 
   function completeToSale() {
     const data = {
