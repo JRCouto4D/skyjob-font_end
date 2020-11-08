@@ -9,6 +9,7 @@ const INITIAL_STATE = {
     subtotal: 0,
   },
   installments: null,
+  customer: null,
 };
 
 export default function sale(state = INITIAL_STATE, action) {
@@ -78,6 +79,7 @@ export default function sale(state = INITIAL_STATE, action) {
         };
         draft.loading = false;
         draft.installments = null;
+        draft.customer = null;
         break;
       }
 
@@ -134,6 +136,7 @@ export default function sale(state = INITIAL_STATE, action) {
           subtotal: 0,
         };
         draft.installments = null;
+        draft.customer = null;
         draft.loading = false;
         break;
       }
@@ -144,6 +147,16 @@ export default function sale(state = INITIAL_STATE, action) {
 
       case '@sale/SET_INSTALLMENTS': {
         draft.installments = action.payload.data;
+        break;
+      }
+
+      case '@sale/SET_CUSTOMER': {
+        draft.customer = action.payload.data;
+        break;
+      }
+
+      case '@sale/RESET_CUSTOMER': {
+        draft.customer = null;
         break;
       }
       default:

@@ -89,15 +89,28 @@ export function* editToItem({ payload }) {
 
 export function* completeToSale({ payload }) {
   try {
-    const { payment, sale_id, installments } = payload.data;
+    const { payment, sale_id, installments, customer_id } = payload.data;
 
     if (payment === 2) {
+      if (customer_id === null) {
+        yield call(api.put, `/sale/${sale_id}/complete`, {
+          payment,
+          installments,
+        });
+      } else {
+        yield call(api.put, `/sale/${sale_id}/complete`, {
+          payment,
+          installments,
+          customer_id,
+        });
+      }
+    } else if (customer_id === null) {
+      yield call(api.put, `/sale/${sale_id}/complete`, { payment });
+    } else {
       yield call(api.put, `/sale/${sale_id}/complete`, {
         payment,
-        installments,
+        customer_id,
       });
-    } else {
-      yield call(api.put, `/sale/${sale_id}/complete`, { payment });
     }
 
     yield put(completeToSaleSuccess());
