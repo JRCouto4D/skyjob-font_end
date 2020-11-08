@@ -13,7 +13,10 @@ import Payment2 from '../../../../components/Payment2';
 
 import { formatPrice } from '../../../../util/format';
 
-import { completeToSaleRequest } from '../../../../store/module/sale/actions';
+import {
+  completeToSaleRequest,
+  resetCustomer,
+} from '../../../../store/module/sale/actions';
 
 import {
   Container,
@@ -26,13 +29,15 @@ import {
 } from './styles';
 
 function Payment() {
-  const { dataSale, installments } = useSelector((state) => state.saleData);
+  const { dataSale, installments, customer } = useSelector(
+    (state) => state.saleData
+  );
   const dispatch = useDispatch();
 
-  const [customer, setCustomer] = useState(false);
+  const [viewCustomer, setViewCustomer] = useState(false);
   const [viewPayment2, setViewPayment2] = useState(false);
-  const [infoTrue, setInfoTrue] = useState(false);
-  const [infoFalse, setInfoFalse] = useState(true);
+  const [infoTrue, setInfoTrue] = useState(!!customer);
+  const [infoFalse, setInfoFalse] = useState(!customer);
   const [animation, setAnimation] = useState(0);
   const [animation2, setAnimation2] = useState(1);
   const [selectedPayment, setSelectedPayment] = useState({
@@ -58,24 +63,28 @@ function Payment() {
   function handleInfoTrue() {
     setInfoTrue(true);
     setInfoFalse(false);
-    setCustomer(true);
     setAnimation(0);
+    setViewCustomer(false);
   }
 
   function handleInfoFalse() {
     setInfoFalse(true);
     setInfoTrue(false);
-    setCustomer(false);
     setAnimation(0);
+    setViewCustomer(false);
   }
 
   const renderSetCustomer = useMemo(
     () => (
       <BoxSetCustomer
         handleInfoFalse={() => handleInfoFalse()}
+        handleInfoTrue={() => handleInfoTrue()}
         animation={animation}
         setAnimation={() => {
           setAnimation(1);
+        }}
+        handleSelectedCustomer={() => {
+          setAnimation(2);
         }}
       />
     ),
@@ -190,6 +199,7 @@ function Payment() {
       payment: selectedPayment.id,
       sale_id: dataSale.id,
       installments: installments ? installments.installments : 0,
+      customer_id: customer ? customer.id : null,
     };
 
     confirmAlert({
@@ -222,7 +232,11 @@ function Payment() {
                   type="button"
                   className="option-block"
                   poup={infoTrue}
-                  onClick={handleInfoTrue}
+                  disabled={infoTrue}
+                  onClick={() => {
+                    handleInfoTrue();
+                    setViewCustomer(true);
+                  }}
                 >
                   <div className="option-container">
                     <div className="option-content" />
@@ -234,7 +248,10 @@ function Payment() {
                   type="button"
                   className="option-block"
                   poup={infoFalse}
-                  onClick={handleInfoFalse}
+                  onClick={() => {
+                    handleInfoFalse();
+                    dispatch(resetCustomer());
+                  }}
                 >
                   <div className="option-container">
                     <div className="option-content" />
@@ -242,6 +259,35 @@ function Payment() {
                   <strong>NÃO</strong>
                 </OptionButton>
               </div>
+              {customer && (
+                <div className="box-data-customer">
+                  <div className="label-block">
+                    <strong>NOME:</strong>
+                    <span>
+                      {customer || customer.name ? customer.name : ''}
+                    </span>
+                  </div>
+
+                  <div className="label-block">
+                    <strong>CPF:</strong>
+                    <span>{customer || customer.cpf ? customer.cpf : ''}</span>
+                  </div>
+
+                  <div className="label-block">
+                    <strong>EMAIL:</strong>
+                    <span>
+                      {customer || customer.email ? customer.email : ''}
+                    </span>
+                  </div>
+
+                  <div className="label-block">
+                    <strong>TELEFONE:</strong>
+                    <span>
+                      {customer || customer.telephone ? customer.telephone : ''}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="box-payment">
@@ -272,7 +318,7 @@ function Payment() {
             </button>
           </Footer>
 
-          {customer && renderSetCustomer}
+          {viewCustomer && renderSetCustomer}
 
           {selectedPayment.id === 2 && viewPayment2 && renderPayment2}
         </BoxLeft>

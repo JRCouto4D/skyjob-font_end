@@ -49,6 +49,23 @@ export const Content = styled.div`
       color: #666;
     }
   }
+
+  div.box-data-customer {
+    margin-top: 15px;
+
+    div.label-block {
+      margin-top: 5px;
+
+      strong {
+        color: #333;
+      }
+
+      span {
+        color: #333;
+        margin-left: 5px;
+      }
+    }
+  }
 `;
 
 export const OptionButton = styled.button`
