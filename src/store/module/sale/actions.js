@@ -109,3 +109,16 @@ export function setInstallments(data) {
     payload: { data },
   };
 }
+
+export function setCustomer(data) {
+  return {
+    type: '@sale/SET_CUSTOMER',
+    payload: { data },
+  };
+}
+
+export function resetCustomer() {
+  return {
+    type: '@sale/RESET_CUSTOMER',
+  };
+}
