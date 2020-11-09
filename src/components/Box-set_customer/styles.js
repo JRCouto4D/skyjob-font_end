@@ -173,13 +173,14 @@ export const Container = styled.div`
     border: 1px solid #ddd;
     padding: 15px;
     border-radius: 4px;
+    height: 110px;
   }
 `;
 
 export const Block = styled.div``;
 
 export const TableCustomers = styled.ul`
-  min-height: 205px;
+  height: 210px;
 
   li.table-header {
     display: grid;
@@ -257,16 +258,17 @@ export const Pagination = styled.div`
 `;
 
 export const BoxCustomer = styled.div`
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 300px 195px 195px 195px;
+  grid-column-gap: 10px;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
   margin-top: 10px;
 
   div.label-block {
     display: flex;
     flex-direction: column;
+    height: 30px;
 
     strong {
       color: #333;
@@ -279,7 +281,7 @@ export const BoxCustomer = styled.div`
 `;
 
 export const BoxButtons = styled.div`
-  margin-top: 2px;
+  margin-top: 5px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -336,7 +338,7 @@ const rotate = keyframes`
 
 export const Loading = styled.div`
   width: 100%;
-  height: 300px;
+  height: 210px;
   left: 0;
   display: flex;
   justify-content: center;
