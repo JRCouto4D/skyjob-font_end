@@ -62,7 +62,7 @@ function BoxSetCustomer({
     setTotal(response.data.total);
     setPrePage(Math.ceil(response.data.total / 5));
     setLoading(false);
-  }, [page, search]);
+  }, [page, search, company]);
 
   useEffect(() => {
     loadCustomers();
