@@ -10,8 +10,12 @@ import {
 } from 'react-icons/md';
 import { FaSpinner } from 'react-icons/fa';
 import { Input } from '@rocketseat/unform';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import { toast } from 'react-toastify';
 
 import api from '../../../services/api';
+import history from '../../../services/history';
 
 import {
   Container,
@@ -66,6 +70,34 @@ function Customers() {
     loadCustomers();
   }
 
+  const handleDeleteCustomer = useCallback(
+    async (id) => {
+      confirmAlert({
+        title: 'Confirmar remoção',
+        message: 'Deseja remover este cliente?',
+        buttons: [
+          {
+            label: 'SIM',
+            onClick: async () => {
+              try {
+                await api.delete(`company/${company.id}/customers/${id}`);
+                toast.success('O cliente foi removido com sucesso!');
+                loadCustomers();
+              } catch (err) {
+                toast.error('Algo deu errado, por favor tente mais tarde');
+              }
+            },
+          },
+          {
+            label: 'NÃO',
+            onClick: () => {},
+          },
+        ],
+      });
+    },
+    [company, loadCustomers]
+  );
+
   const tableCustomers = useMemo(
     () => (
       <TableCustomer>
@@ -83,11 +115,19 @@ function Customers() {
             <strong>{customer.telephone}</strong>
             <strong>{customer.email}</strong>
             <div className="box-actions">
-              <button type="button">
+              <button
+                type="button"
+                onClick={() =>
+                  history.push('/customers/newCustomer', { customer })
+                }
+              >
                 <MdCreate size={20} color="#333" />
               </button>
 
-              <button type="button">
+              <button
+                type="button"
+                onClick={() => handleDeleteCustomer(customer.id)}
+              >
                 <MdDeleteForever size={20} color="#ab0000" />
               </button>
             </div>
@@ -95,7 +135,7 @@ function Customers() {
         ))}
       </TableCustomer>
     ),
-    [customers]
+    [customers, handleDeleteCustomer]
   );
 
   return (
@@ -124,7 +164,10 @@ function Customers() {
               />
             </div>
 
-            <button type="button">
+            <button
+              type="button"
+              onClick={() => history.push('/customers/newCustomer')}
+            >
               <span>ADICIONAR</span>
               <strong>NOVO</strong>
             </button>
