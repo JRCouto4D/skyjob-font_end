@@ -38,19 +38,24 @@ function Customers() {
   const { company } = useSelector((state) => state.user.profile);
 
   const loadCustomers = useCallback(async () => {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const response = await api.get(`company/${company.id}/customers/list`, {
-      params: {
-        page,
-        name: search,
-      },
-    });
+      const response = await api.get(`company/${company.id}/customers/list`, {
+        params: {
+          page,
+          name: search,
+        },
+      });
 
-    setCustomers(response.data.customers);
-    setTotal(response.data.total);
-    setPrePage(Math.ceil(response.data.total / 5));
-    setLoading(false);
+      setCustomers(response.data.customers);
+      setTotal(response.data.total);
+      setPrePage(Math.ceil(response.data.total / 5));
+      setLoading(false);
+    } catch (err) {
+      toast.error(`ALGO DEU ERRADO, POR FAVOR TENTE MAIS TARDE. ERRO: ${err}`);
+      history.push('/main');
+    }
   }, [page, search, company]);
 
   useEffect(() => {
@@ -103,7 +108,7 @@ function Customers() {
       <TableCustomer>
         <li className="header">
           <strong>NOME</strong>
-          <strong>CPF</strong>
+          <strong>CPF/CNPJ</strong>
           <strong>TELEFONE</strong>
           <strong>EMAIL</strong>
           <strong>AÇÕES</strong>
@@ -111,7 +116,7 @@ function Customers() {
         {customers.map((customer) => (
           <LineTableCustomers>
             <strong>{customer.name}</strong>
-            <strong>{customer.cpf}</strong>
+            <strong>{customer.cpf || customer.cnpj}</strong>
             <strong>{customer.telephone}</strong>
             <strong>{customer.email}</strong>
             <div className="box-actions">
