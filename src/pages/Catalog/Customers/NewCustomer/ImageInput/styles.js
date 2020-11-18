@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const Container = styled.div`
   align-self: center;
@@ -16,5 +16,27 @@ export const Container = styled.div`
     input {
       display: none;
     }
+  }
+`;
+
+const rotate = keyframes`
+  from{
+    transform: rotate(0deg)
+  }
+  to{
+    transform: rotate(360deg)
+  }
+`;
+
+export const Loading = styled.div`
+  height: 120px;
+  width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #eee;
+
+  svg {
+    animation: ${rotate} 1s linear infinite;
   }
 `;

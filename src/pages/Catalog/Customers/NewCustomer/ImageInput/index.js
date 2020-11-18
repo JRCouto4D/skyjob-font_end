@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useField } from '@rocketseat/unform';
+import { FaSpinner } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 import api from '../../../../../services/api';
 
-import { Container } from './styles';
+import { Container, Loading } from './styles';
 import noImage from '../../../../../assets/notImage.png';
 
 function ImageInput() {
   const { defaultValue, registerField } = useField('avatar');
+  const [loading, setLoading] = useState(false);
 
   const [file, setFile] = useState(defaultValue && defaultValue.id);
   const [preview, setPreview] = useState(defaultValue && defaultValue.url);
@@ -25,22 +28,35 @@ function ImageInput() {
   }, [ref, registerField]);
 
   async function handleChange(e) {
-    const data = new FormData();
+    try {
+      setLoading(true);
+      const data = new FormData();
 
-    data.append('file', e.target.files[0]);
+      data.append('file', e.target.files[0]);
 
-    const response = await api.post('files', data);
+      const response = await api.post('files', data);
 
-    const { id, url } = response.data;
+      const { id, url } = response.data;
 
-    setFile(id);
-    setPreview(url);
+      setFile(id);
+      setPreview(url);
+      setLoading(false);
+    } catch (err) {
+      toast.error(`NÃO FOI POSSÍVEL CARREGAR A IMAGEM. ERRO: ${err}`);
+      setLoading(false);
+    }
   }
 
   return (
     <Container>
       <label htmlFor="image">
-        <img src={preview || noImage} alt="" />
+        {loading ? (
+          <Loading>
+            <FaSpinner color="#ccc" size={30} />
+          </Loading>
+        ) : (
+          <img src={preview || noImage} alt="" />
+        )}
 
         <input
           type="file"
