@@ -12,6 +12,7 @@ import Providers from '../pages/Catalog/Providers';
 import NewProduct from '../pages/Catalog/Products/NewProduct';
 import NewCategory from '../pages/Catalog/Categories/NewCategory';
 import NewProviders from '../pages/Catalog/Providers/NewProviders';
+import NewCustomer from '../pages/Catalog/Customers/NewCustomer';
 
 import Budgets from '../pages/Sales/Budgets';
 import PDV from '../pages/Sales/PDV';
@@ -35,6 +36,12 @@ export default function Routes() {
         isPrivate
       />
       <Route path="/customers" exact component={Customers} isPrivate />
+      <Route
+        path="/customers/newCustomer"
+        exact
+        component={NewCustomer}
+        isPrivate
+      />
       <Route path="/products" exact component={Products} isPrivate />
       <Route path="/products/newItem" exact component={NewProduct} isPrivate />
       <Route path="/providers" exact component={Providers} isPrivate />
