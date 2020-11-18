@@ -204,6 +204,7 @@ function NewCustomer({ location }) {
                       inputCPF.style.borderColor = '#ddd';
                     }
                   }}
+                  disabled={!!location.state}
                 />
               </InputBlock>
             </div>
@@ -360,11 +361,14 @@ function NewCustomer({ location }) {
             <h1>NOVO CLIENTE</h1>
 
             <div className="box-right">
-              <strong>EMPRESA</strong>
+              <strong style={{ color: location.state ? '#ccc' : '#333' }}>
+                EMPRESA
+              </strong>
               <ButtonActive
                 type="button"
                 onClick={() => setActive(!active)}
                 active={active}
+                disabled={!!location.state}
               >
                 <div>
                   <div>

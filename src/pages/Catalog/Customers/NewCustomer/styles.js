@@ -67,6 +67,11 @@ export const ButtonActive = styled.button`
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4);
   margin-left: 15px;
 
+  :disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+
   && div {
     display: flex;
     width: 54px;
@@ -191,6 +196,10 @@ export const InputBlock = styled.div`
     margin-top: 5px;
     ::placeholder {
       color: #ddd;
+    }
+    :disabled {
+      opacity: 0.5;
+      color: #999;
     }
   }
 `;
