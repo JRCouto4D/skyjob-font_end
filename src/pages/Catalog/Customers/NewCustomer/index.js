@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { MdClear } from 'react-icons/md';
 import { Form, Input } from '@rocketseat/unform';
@@ -27,124 +27,127 @@ function NewCustomer({ location }) {
   );
   const [inputError, setInputError] = useState(0);
 
-  async function handleSubmit(data) {
-    if (data.name === '') {
-      setInputError(1);
-      toast.error('O NOME DO CLIENTE É OBRIGRATÓRIO');
+  const handleSubmit = useCallback(
+    async (data) => {
+      if (data.name === '') {
+        setInputError(1);
+        toast.error('O NOME DO CLIENTE É OBRIGRATÓRIO');
 
-      const inputName = document.getElementById('name');
-      inputName.focus();
-      inputName.style.borderColor = '#FF1E40';
+        const inputName = document.getElementById('name');
+        inputName.focus();
+        inputName.style.borderColor = '#FF1E40';
 
-      return;
-    }
+        return;
+      }
 
-    if (active && data.cnpj === '') {
-      setInputError(2);
-      toast.error('O CNPJ DO CLIENTE É OBRIGRATÓRIO');
+      if (active && data.cnpj === '') {
+        setInputError(2);
+        toast.error('O CNPJ DO CLIENTE É OBRIGRATÓRIO');
 
-      const inputCNPJ = document.getElementById('cnpj');
-      inputCNPJ.focus();
-      inputCNPJ.style.borderColor = '#FF1E40';
+        const inputCNPJ = document.getElementById('cnpj');
+        inputCNPJ.focus();
+        inputCNPJ.style.borderColor = '#FF1E40';
 
-      return;
-    }
-    if (data.cpf === '') {
-      setInputError(2);
-      toast.error('O CPF DO CLIENTE É OBRIGATÓRIO');
+        return;
+      }
+      if (data.cpf === '') {
+        setInputError(2);
+        toast.error('O CPF DO CLIENTE É OBRIGATÓRIO');
 
-      const inputCPF = document.getElementById('cpf');
-      inputCPF.focus();
-      inputCPF.style.borderColor = '#FF1E40';
-      return;
-    }
+        const inputCPF = document.getElementById('cpf');
+        inputCPF.focus();
+        inputCPF.style.borderColor = '#FF1E40';
+        return;
+      }
 
-    const response = await api.get(`/company/${company.id}/customers`);
+      const response = await api.get(`/company/${company.id}/customers`);
 
-    const { customers } = response.data;
+      const { customers } = response.data;
 
-    if (customers.length >= 1) {
-      if (active) {
-        const checkCustomer = customers.filter(
-          (customer) => customer.cnpj === data.cnpj
-        );
+      if (customers.length >= 1) {
+        if (active) {
+          const checkCustomer = customers.filter(
+            (customer) => customer.cnpj === data.cnpj
+          );
 
-        if (checkCustomer.length >= 1) {
-          const dataCompleted = { ...data, type: active === true ? 2 : 1 };
-          if (location.state && location.state.customer.cnpj === data.cnpj) {
-            try {
-              const { customer } = location.state;
+          if (checkCustomer.length >= 1) {
+            const dataCompleted = { ...data, type: active === true ? 2 : 1 };
+            if (location.state && location.state.customer.cnpj === data.cnpj) {
+              try {
+                const { customer } = location.state;
 
-              await api.put(
-                `company/${company.id}/customers/${customer.id}`,
-                dataCompleted
-              );
+                await api.put(
+                  `company/${company.id}/customers/${customer.id}`,
+                  dataCompleted
+                );
 
-              toast.success('CLIENTE EDITADO COM SUCESSO!');
-              history.push('/customers');
-            } catch (err) {
-              toast.error('ALGO DEU ERRADO, POR FAVOR TENTE MAIS TARDE');
-              history.push('/customers');
+                toast.success('CLIENTE EDITADO COM SUCESSO!');
+                history.push('/customers');
+              } catch (err) {
+                toast.error('ALGO DEU ERRADO, POR FAVOR TENTE MAIS TARDE');
+                history.push('/customers');
+              }
+              return;
             }
+
+            setInputError(2);
+            toast.error('ESSE CRIENTE JÁ ESTÁ REGISTRADO NA BASE DE DADOS');
+
+            const inputCNPJ = document.getElementById('cnpj');
+            inputCNPJ.focus();
+            inputCNPJ.style.borderColor = '#FF1E40';
             return;
           }
+        } else {
+          const checkCustomer = customers.filter(
+            (customer) => customer.cpf === data.cpf
+          );
 
-          setInputError(2);
-          toast.error('ESSE CRIENTE JÁ ESTÁ REGISTRADO NA BASE DE DADOS');
+          if (checkCustomer.length >= 1) {
+            const dataCompleted = { ...data, type: active === true ? 2 : 1 };
+            if (location.state && location.state.customer.cpf === data.cpf) {
+              try {
+                const { customer } = location.state;
 
-          const inputCNPJ = document.getElementById('cnpj');
-          inputCNPJ.focus();
-          inputCNPJ.style.borderColor = '#FF1E40';
-          return;
-        }
-      } else {
-        const checkCustomer = customers.filter(
-          (customer) => customer.cpf === data.cpf
-        );
+                await api.put(
+                  `company/${company.id}/customers/${customer.id}`,
+                  dataCompleted
+                );
 
-        if (checkCustomer.length >= 1) {
-          const dataCompleted = { ...data, type: active === true ? 2 : 1 };
-          if (location.state && location.state.customer.cpf === data.cpf) {
-            try {
-              const { customer } = location.state;
-
-              await api.put(
-                `company/${company.id}/customers/${customer.id}`,
-                dataCompleted
-              );
-
-              toast.success('CLIENTE EDITADO COM SUCESSO!');
-              history.push('/customers');
-            } catch (err) {
-              toast.error('ALGO DEU ERRADO, POR FAVOR TENTE MAIS TARDE');
-              history.push('/customers');
+                toast.success('CLIENTE EDITADO COM SUCESSO!');
+                history.push('/customers');
+              } catch (err) {
+                toast.error('ALGO DEU ERRADO, POR FAVOR TENTE MAIS TARDE');
+                history.push('/customers');
+              }
+              return;
             }
+
+            setInputError(2);
+            toast.error('ESSE CRIENTE JÁ ESTÁ REGISTRADO NA BASE DE DADOS');
+
+            const inputCPF = document.getElementById('cpf');
+            inputCPF.focus();
+            inputCPF.style.borderColor = '#FF1E40';
             return;
           }
-
-          setInputError(2);
-          toast.error('ESSE CRIENTE JÁ ESTÁ REGISTRADO NA BASE DE DADOS');
-
-          const inputCPF = document.getElementById('cpf');
-          inputCPF.focus();
-          inputCPF.style.borderColor = '#FF1E40';
-          return;
         }
       }
-    }
 
-    const dataCompleted = { ...data, type: active === true ? 2 : 1 };
+      const dataCompleted = { ...data, type: active === true ? 2 : 1 };
 
-    try {
-      await api.post(`company/${company.id}/customers`, dataCompleted);
+      try {
+        await api.post(`company/${company.id}/customers`, dataCompleted);
 
-      toast.success('CLIENTE CADASTRADO COM SUCESSO!');
-      history.push('/customers');
-    } catch (err) {
-      toast.error('ALGO DEU ERRADO, POR FAVOR TENTE MAIS TARDE');
-      history.push('/customers');
-    }
-  }
+        toast.success('CLIENTE CADASTRADO COM SUCESSO!');
+        history.push('/customers');
+      } catch (err) {
+        toast.error('ALGO DEU ERRADO, POR FAVOR TENTE MAIS TARDE');
+        history.push('/customers');
+      }
+    },
+    [active, company, location]
+  );
 
   const memoForm = useMemo(
     () => (
@@ -346,7 +349,7 @@ function NewCustomer({ location }) {
         <button type="submit">SALVAR</button>
       </Form>
     ),
-    [inputError, active]
+    [inputError, active, location, handleSubmit]
   );
 
   return (
