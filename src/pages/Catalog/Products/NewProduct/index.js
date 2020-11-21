@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { MdClear, MdAdd } from 'react-icons/md';
 import { Form, Input } from '@rocketseat/unform';
@@ -294,9 +293,13 @@ function NewProduct({ location }) {
   return (
     <Container>
       <Modal>
-        <Link to="/products">
+        <button
+          type="button"
+          className="button-close"
+          onClick={() => history.goBack()}
+        >
           <MdClear color="#fff" size={25} />
-        </Link>
+        </button>
 
         <Content>
           <header>

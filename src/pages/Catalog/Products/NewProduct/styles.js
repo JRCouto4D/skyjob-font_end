@@ -16,10 +16,12 @@ export const Modal = styled.div`
   justify-content: center;
   align-items: center;
 
-  a {
+  button.button-close {
     position: absolute;
     top: 20px;
     right: 20px;
+    background: none;
+    border: none;
   }
 `;
 
