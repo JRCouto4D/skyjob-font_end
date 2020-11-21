@@ -29,5 +29,6 @@ export const BoxWaterMark = styled.div`
   img {
     position: relative;
     height: 100%;
+    opacity: 0.7;
   }
 `;
