@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { MdPrint } from 'react-icons/md';
 
 import { Container } from './styles';
 
@@ -116,6 +117,12 @@ function ListSales() {
   return (
     <Container>
       <main>
+        <div className="box-print">
+          <button type="button">
+            <MdPrint color="#333" size={20} />
+            <strong>IMPRIMIR</strong>
+          </button>
+        </div>
         <div>{listMemo}</div>
         <footer>
           <div className="label-block">

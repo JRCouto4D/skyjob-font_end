@@ -7,9 +7,34 @@ export const Container = styled.div`
   main {
     margin-top: 130px;
 
+    div.box-print {
+      margin-top: 10px;
+      width: 658px;
+      display: flex;
+      justify-content: flex-end;
+
+      button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        padding-bottom: 2.5px;
+        transition: 0.2s;
+
+        :hover {
+          opacity: 0.6;
+        }
+
+        strong {
+          margin-left: 5px;
+        }
+      }
+    }
+
     ul {
       width: 658px;
-      margin-top: 20px;
+      margin-top: 5px;
       background: rgba(240, 240, 240, 0.7);
 
       li.table-header {
@@ -58,7 +83,7 @@ export const Container = styled.div`
       align-items: center;
       justify-content: space-between;
       width: 658px;
-      margin-top: 3%;
+      margin-top: 2.1%;
 
       div.label-block {
         display: flex;
