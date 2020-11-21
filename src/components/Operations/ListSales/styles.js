@@ -55,7 +55,7 @@ export const Container = styled.div`
       }
 
       div.box-result-table {
-        max-height: 18vw;
+        height: 18vw;
         overflow: auto;
 
         li {

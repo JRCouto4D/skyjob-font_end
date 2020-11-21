@@ -4,85 +4,7 @@ import { MdPrint } from 'react-icons/md';
 import { Container } from './styles';
 
 function ListSales() {
-  const [sales, setSales] = useState([
-    {
-      id: 1,
-      date: '22/11/2020',
-      hour: '14:25hs',
-      salesman: 'Jefferson Couto',
-      total: 'R$210,00',
-    },
-    {
-      id: 2,
-      date: '22/11/2020',
-      hour: '14:31hs',
-      salesman: 'Jefferson Couto',
-      total: 'R$325,00',
-    },
-    {
-      id: 3,
-      date: '22/11/2020',
-      hour: '14:49hs',
-      salesman: 'Jefferson Couto',
-      total: 'R$452,00',
-    },
-    {
-      id: 4,
-      date: '22/11/2020',
-      hour: '15:16hs',
-      salesman: 'Jefferson Couto',
-      total: 'R$117,00',
-    },
-    {
-      id: 4,
-      date: '22/11/2020',
-      hour: '15:16hs',
-      salesman: 'Jefferson Couto',
-      total: 'R$117,00',
-    },
-    {
-      id: 4,
-      date: '22/11/2020',
-      hour: '15:16hs',
-      salesman: 'Jefferson Couto',
-      total: 'R$117,00',
-    },
-    {
-      id: 4,
-      date: '22/11/2020',
-      hour: '15:16hs',
-      salesman: 'Jefferson Couto',
-      total: 'R$117,00',
-    },
-    {
-      id: 4,
-      date: '22/11/2020',
-      hour: '15:16hs',
-      salesman: 'Jefferson Couto',
-      total: 'R$117,00',
-    },
-    {
-      id: 4,
-      date: '22/11/2020',
-      hour: '15:16hs',
-      salesman: 'Jefferson Couto',
-      total: 'R$117,00',
-    },
-    {
-      id: 4,
-      date: '22/11/2020',
-      hour: '15:16hs',
-      salesman: 'Jefferson Couto',
-      total: 'R$117,00',
-    },
-    {
-      id: 4,
-      date: '22/11/2020',
-      hour: '15:16hs',
-      salesman: 'Jefferson Couto',
-      total: 'R$117,00',
-    },
-  ]);
+  const [sales, setSales] = useState([]);
 
   const listMemo = useMemo(
     () => (
@@ -107,7 +29,18 @@ function ListSales() {
             ))}
           </div>
         ) : (
-          <h2>NENHUM RESULTADO</h2>
+          <div className="box-result-table">
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+              }}
+            >
+              <h2>NENHUM RESULTADO</h2>
+            </div>
+          </div>
         )}
       </ul>
     ),
@@ -117,12 +50,14 @@ function ListSales() {
   return (
     <Container>
       <main>
-        <div className="box-print">
-          <button type="button">
-            <MdPrint color="#333" size={20} />
-            <strong>IMPRIMIR</strong>
-          </button>
-        </div>
+        {sales.length >= 1 && (
+          <div className="box-print">
+            <button type="button">
+              <MdPrint color="#333" size={20} />
+              <strong>IMPRIMIR</strong>
+            </button>
+          </div>
+        )}
         <div>{listMemo}</div>
         <footer>
           <div className="label-block">
