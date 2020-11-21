@@ -47,12 +47,12 @@ function BoxPointSale({ children, poup }) {
         </div>
 
         <BoxActions>
-          <GoSell to="/main" color={poup ? '#ab0000' : '#333'}>
+          <GoSell to="/pdv" color={poup ? '#ab0000' : '#333'}>
             <MdSwapHoriz size={50} color="#fff" />
             <strong>VENDER</strong>
           </GoSell>
 
-          <GoOperations to="/main" color={poup ? '#333' : '#ab0000'}>
+          <GoOperations to="/operations" color={poup ? '#333' : '#ab0000'}>
             <MdSettings size={50} color="#fff" />
             <strong>OPERAÇÕES</strong>
           </GoOperations>
