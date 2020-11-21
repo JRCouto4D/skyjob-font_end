@@ -41,12 +41,12 @@ function ListSales() {
       setSales([]);
       toast.error('ALDO DEU ERRADO, POR FAVOR TENTE MAIS TARDE');
     }
-  }, []);
+  }, [pdv]);
 
   useEffect(() => {
     loadSales();
     setTotalSales();
-  }, []);
+  }, [loadSales]);
 
   useEffect(() => console.tron.log(sales), [sales]);
 
