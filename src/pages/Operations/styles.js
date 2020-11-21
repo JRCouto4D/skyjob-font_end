@@ -13,4 +13,21 @@ export const Content = styled.div`
   nav {
     position: absolute;
   }
+
+  main {
+    width: 80%;
+    position: absolute;
+  }
+`;
+
+export const BoxWaterMark = styled.div`
+  position: absolute;
+  height: 65%;
+  right: 100px;
+  margin-top: 50px;
+
+  img {
+    position: relative;
+    height: 100%;
+  }
 `;
