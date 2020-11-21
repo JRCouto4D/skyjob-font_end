@@ -109,7 +109,10 @@ function Main() {
               <strong>PDV</strong>
             </button>
             <div />
-            <button type="button">
+            <button
+              type="button"
+              onClick={() => history.push('/customers/newCustomer')}
+            >
               <span>NOVO</span>
               <strong>CLIENTE</strong>
             </button>
