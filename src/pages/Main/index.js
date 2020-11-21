@@ -3,6 +3,8 @@ import React from 'react';
 import low from '../../assets/low.png';
 import up from '../../assets/up.png';
 
+import history from '../../services/history';
+
 import {
   Container,
   Content,
@@ -43,7 +45,10 @@ function Main() {
             </body>
           </BoxJob>
           <BoxButton setColor="#9cb5c8">
-            <button type="button">
+            <button
+              type="button"
+              onClick={() => history.push('/products/newItem')}
+            >
               <strong>ADICIONAR ITEM</strong>
             </button>
           </BoxButton>
@@ -99,7 +104,7 @@ function Main() {
             </body>
           </BoxJob>
           <BoxButton setColor="#00bfdd">
-            <button type="button">
+            <button type="button" onClick={() => history.push('/pdv')}>
               <span>ABRIR</span>
               <strong>PDV</strong>
             </button>

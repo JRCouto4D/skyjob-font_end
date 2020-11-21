@@ -40,6 +40,7 @@ function ListSales() {
     } catch (err) {
       setSales([]);
       toast.error('ALDO DEU ERRADO, POR FAVOR TENTE MAIS TARDE');
+      setLoading(false);
     }
   }, [pdv]);
 
@@ -120,18 +121,20 @@ function ListSales() {
             </div>
           )
         )}
-        <div>{listMemo}</div>
-        <footer>
-          <div className="label-block">
-            <strong>NUMERO DE VENDAS:</strong>
-            <h3 style={{ color: '#00bfdd' }}>{numberSales}</h3>
-          </div>
+        <div>{!loading && listMemo}</div>
+        {!loading && (
+          <footer>
+            <div className="label-block">
+              <strong>NUMERO DE VENDAS:</strong>
+              <h3 style={{ color: '#00bfdd' }}>{numberSales}</h3>
+            </div>
 
-          <div className="label-block">
-            <strong>TOTAL:</strong>
-            <h3>{formatPrice(total)}</h3>
-          </div>
-        </footer>
+            <div className="label-block">
+              <strong>TOTAL:</strong>
+              <h3>{formatPrice(total)}</h3>
+            </div>
+          </footer>
+        )}
       </main>
     </Container>
   );
