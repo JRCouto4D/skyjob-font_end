@@ -41,16 +41,6 @@ function Operations() {
             />
           </BoxWaterMark>
 
-          <nav>
-            <Menu
-              handleListSales={() => setValueMenu(0)}
-              handleBleed={() => setValueMenu(1)}
-              handleReinforcement={() => setValueMenu(2)}
-              handleClosure={() => setValueMenu(3)}
-              handleOperations={() => setValueMenu(4)}
-            />
-          </nav>
-
           <main>
             {valueMenu === 0 ? (
               <LisSales />
@@ -64,6 +54,16 @@ function Operations() {
               <ComOperations />
             )}
           </main>
+
+          <nav>
+            <Menu
+              handleListSales={() => setValueMenu(0)}
+              handleBleed={() => setValueMenu(1)}
+              handleReinforcement={() => setValueMenu(2)}
+              handleClosure={() => setValueMenu(3)}
+              handleOperations={() => setValueMenu(4)}
+            />
+          </nav>
         </Content>
       </BoxPDV>
     </Container>

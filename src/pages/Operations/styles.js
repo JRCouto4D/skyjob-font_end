@@ -16,6 +16,7 @@ export const Content = styled.div`
 
   main {
     width: 80%;
+    height: 55.5%;
     position: absolute;
   }
 `;
