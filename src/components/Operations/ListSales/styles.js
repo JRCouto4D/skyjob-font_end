@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components';
 export const Container = styled.div`
   display: flex;
   height: 100%;
+  min-width: 658px;
 
   main {
     margin-top: 130px;
@@ -55,7 +56,8 @@ export const Container = styled.div`
       }
 
       div.box-result-table {
-        height: 18vw;
+        height: 245px;
+        min-height: 245px;
         overflow: auto;
 
         li {

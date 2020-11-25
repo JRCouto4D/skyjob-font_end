@@ -8,9 +8,9 @@ import { Wrapper, Content } from './styles';
 function deafultLayout({ children }) {
   return (
     <Wrapper>
+      <Content>{children}</Content>
       <Header />
       <Footer />
-      <Content>{children}</Content>
     </Wrapper>
   );
 }
