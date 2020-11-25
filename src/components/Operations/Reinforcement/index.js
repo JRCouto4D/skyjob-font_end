@@ -22,7 +22,52 @@ function Reinforcement() {
   const [err, setErr] = useState(false);
   const [inputData, setInputData] = useState('');
 
-  async function handleReinforcement() {}
+  function handleReinforcement() {
+    try {
+      if (inputData === '') {
+        toast.error('INFORME O VALOR À SER INCLUÍDO DO CAIXA.');
+        setErr(true);
+        const inputMoney = document.getElementById('money');
+        const boxInput = document.getElementById('box-input');
+        inputMoney.focus();
+        boxInput.style.borderColor = '#FF1E40';
+        return;
+      }
+
+      confirmAlert({
+        title: 'CONFIRMAR REFORÇO',
+        message: `DESEJA REALMENTE INCLUIR O VALOR DE ${formatPrice(
+          inputData
+        )} NO CAIXA ${pdv.cash_register.description}?`,
+        buttons: [
+          {
+            label: 'SIM',
+            onClick: async () => {
+              setLoading(true);
+
+              await api.post('/point_sales/reinforcement', {
+                point_sale_id: pdv.id,
+                cash_value: inputData,
+              });
+
+              toast.success('OPERAÇÃO REALIZADA COM SUCESSO!');
+              setInputData('');
+              setLoading(false);
+            },
+          },
+          {
+            label: 'NÃO',
+            onClick: () => {},
+          },
+        ],
+      });
+    } catch (error) {
+      toast.error(
+        `ALGO DEU ERRADO, POR FAVOR TENTE MAIS TARDE. ERRO: ${error}`
+      );
+      history.push('/operations');
+    }
+  }
 
   return (
     <Container>
