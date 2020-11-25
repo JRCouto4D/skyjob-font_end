@@ -37,9 +37,21 @@ export const Content = styled.div`
       border-bottom: 1px solid #ddd;
       padding-bottom: 10px;
 
-      strong {
-        font-size: 20px;
-        color: #666;
+      div.top-label-block {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+
+        strong {
+          font-size: 20px;
+          color: #666;
+        }
+
+        span {
+          color: #00bfdd;
+          font-size: 14px;
+          margin-left: 2px;
+        }
       }
 
       span {
