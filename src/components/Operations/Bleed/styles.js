@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const Container = styled.div`
   margin-top: 130px;
@@ -94,5 +94,26 @@ export const Content = styled.div`
         margin-left: 15px;
       }
     }
+  }
+`;
+
+const rotate = keyframes`
+  from{
+    transform: rotate(0deg)
+  }
+  to{
+    transform: rotate(360deg)
+  }
+`;
+
+export const Loading = styled.div`
+  width: 100%;
+  height: 60px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    animation: ${rotate} 1s linear infinite;
   }
 `;
