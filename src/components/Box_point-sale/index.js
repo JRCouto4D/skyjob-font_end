@@ -37,12 +37,14 @@ function BoxPointSale({ children, poup }) {
 
           <div className="info-block">
             <strong>VENDEDOR</strong>
-            <span>{pdv.user.name.toUpperCase()}</span>
+            <span>{pdv ? pdv.user.name.toUpperCase() : ''}</span>
           </div>
 
           <div className="info-block">
             <strong>PDV</strong>
-            <span>{pdv.cash_register.description.toUpperCase()}</span>
+            <span>
+              {pdv ? pdv.cash_register.description.toUpperCase() : ''}
+            </span>
           </div>
         </div>
 
