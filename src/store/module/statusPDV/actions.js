@@ -17,3 +17,16 @@ export function openPdvFailure() {
     type: '@statusPDV/OPEN_PDV_FAILURE',
   };
 }
+
+export function pdvClosureRequest(data) {
+  return {
+    type: '@statusPDV/PDV_CLOSURE_REQUEST',
+    payload: { data },
+  };
+}
+
+export function pdvClosureSuccess() {
+  return {
+    type: '@statusPDV/PDV_CLOSURE_SUCCSS',
+  };
+}
