@@ -15,13 +15,52 @@ export const Content = styled.div`
 
   header {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     margin-top: 10px;
 
-    strong {
-      font-size: 16px;
-      color: #333;
-      margin-top: 5px;
+    div.box-left {
+      strong {
+        font-size: 14px;
+        color: #ccc;
+      }
+
+      div.box-label {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        strong {
+          font-size: 14px;
+          color: #666;
+        }
+
+        span {
+          font-size: 14px;
+          font-weight: bold;
+          color: #8bc53d;
+          margin-left: 5px;
+        }
+      }
+    }
+
+    div.box-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      strong {
+        font-size: 14px;
+        color: #666;
+      }
+
+      span {
+        font-size: 40px;
+        font-weight: bold;
+        color: #8bc53d;
+      }
     }
   }
 
