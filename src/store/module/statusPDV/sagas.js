@@ -4,7 +4,8 @@ import { toast } from 'react-toastify';
 import history from '../../../services/history';
 import api from '../../../services/api';
 
-import { openPdvSuccess, openPdvFailure } from './actions';
+import { openPdvSuccess, openPdvFailure, pdvClosureSuccess } from './actions';
+import { resetDataSale } from '../sale/actions';
 
 export function* openPDV({ payload }) {
   try {
@@ -24,4 +25,27 @@ export function* openPDV({ payload }) {
   }
 }
 
-export default all([takeLatest('@statusPDV/OPEN_PDV_REQUEST', openPDV)]);
+export function* closurePDV({ payload }) {
+  try {
+    const { pdv_id, company_id } = payload.data;
+
+    yield call(api.delete, `/company/${company_id}/point_sales/${pdv_id}`);
+
+    yield call(api.put, `point_sales/${pdv_id}/close`);
+
+    yield put(resetDataSale());
+
+    yield put(pdvClosureSuccess());
+
+    toast.success('O PONTO DE VENDA FOI FECHADO COM SUCESSO!');
+    history.push('/pdv');
+  } catch (err) {
+    toast.error(`ALGO DEU ERRADO, POR FAVOR TENTE MAIS TARDE. ERRO: ${err}`);
+    history.push('/pdv');
+  }
+}
+
+export default all([
+  takeLatest('@statusPDV/OPEN_PDV_REQUEST', openPDV),
+  takeLatest('@statusPDV/PDV_CLOSURE_REQUEST', closurePDV),
+]);

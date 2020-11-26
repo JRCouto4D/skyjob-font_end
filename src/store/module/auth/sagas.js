@@ -29,7 +29,7 @@ export function* signIn({ payload }) {
     history.push('/main');
   } catch (err) {
     toast.error(
-      'Erro ao tentar acessar o sistema. Por favor verifique seus dados'
+      `Erro ao tentar acessar o sistema. Por favor verifique seus dados. ERRO: ${err}`
     );
     yield put(signFailure());
   }

@@ -27,6 +27,18 @@ export default function statusPDV(state = INITIAL_STATE, action) {
         draft.loading = false;
         break;
       }
+
+      case '@statusPDV/PDV_CLOSURE_REQUEST': {
+        draft.loading = true;
+        break;
+      }
+
+      case '@statusPDV/PDV_CLOSURE_SUCCSS': {
+        draft.pdv = null;
+        draft.open = false;
+        draft.loading = false;
+        break;
+      }
       default:
     }
   });

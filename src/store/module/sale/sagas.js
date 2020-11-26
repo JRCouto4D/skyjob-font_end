@@ -117,7 +117,9 @@ export function* completeToSale({ payload }) {
     history.push('/pdv');
     toast.success('A VENDA FOI COMPLETA COM SUCESSO!');
   } catch (erro) {
-    toast.error('ALGO DEU ERRADO E NÃO FOI POSSÍVEL COMPLETAR A VENDA');
+    toast.error(
+      `ALGO DEU ERRADO E NÃO FOI POSSÍVEL COMPLETAR A VENDA. ERRO: ${erro}`
+    );
     yield put(completeToSaleFailure());
   }
 }
