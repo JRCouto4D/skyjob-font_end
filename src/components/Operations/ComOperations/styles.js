@@ -38,6 +38,7 @@ export const Filters = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: default;
 
         div.option-container {
           width: 18px;
@@ -68,6 +69,44 @@ export const Filters = styled.div`
           font-size: 12px;
           margin-left: 10px;
         }
+      }
+    }
+  }
+`;
+
+export const TableOperations = styled.ul`
+  width: 658px;
+  height: 100%;
+  margin-top: 10px;
+
+  li.table-header {
+    display: grid;
+    grid-template-columns: 380px 129px 129px;
+    padding: 10px;
+    background: none;
+
+    strong {
+      font-weight: bold;
+      color: #333;
+    }
+  }
+
+  div.result-table {
+    height: 245px;
+    min-height: 245px;
+    overflow: auto;
+
+    li {
+      display: grid;
+      grid-template-columns: 380px 129px 129px;
+      padding: 10px;
+
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+      align-items: center;
+
+      strong {
+        font-weight: normal;
       }
     }
   }

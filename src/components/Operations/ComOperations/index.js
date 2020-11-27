@@ -1,13 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { MdFilterList, MdDone } from 'react-icons/md';
 
-import { Container, Content, Filters } from './styles';
+import { Container, Content, Filters, TableOperations } from './styles';
 
 function ComOperations() {
   const [opened, setOpened] = useState(true);
   const [bleed, setBleed] = useState(true);
   const [reinforcement, setReinforcement] = useState(true);
   const [closure, setClosure] = useState(true);
+  const [operations, setOperations] = useState([]);
+
+  useEffect(() => {
+    setOperations([
+      {
+        id: 1,
+        operation: 1,
+        hour: '8:10 hs',
+        value: 'R$ 40.00',
+      },
+      {
+        id: 2,
+        operation: 2,
+        hour: '14:16 hs',
+        value: 'R$ 10.00',
+      },
+      {
+        id: 3,
+        operation: 3,
+        hour: '14:45 hs',
+        value: 'R$ 10.00',
+      },
+      {
+        id: 4,
+        operation: 4,
+        hour: '18:05 hs',
+        value: 'R$ 3417.00',
+      },
+    ]);
+  }, []);
 
   function handleOptions(op) {
     switch (op) {
@@ -33,6 +63,204 @@ function ComOperations() {
       default:
     }
   }
+
+  function setStyle(op) {
+    if (op === 1) {
+      return (
+        <div
+          style={{
+            background: '#BAD2FF',
+            border: 1,
+            borderColor: '#DFF0DF',
+            borderRadius: 50,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 130,
+            height: 27,
+          }}
+        >
+          <div
+            style={{
+              width: 8,
+              height: 8,
+              background: '#4D85EE',
+              borderRadius: 50,
+            }}
+          />
+          <strong
+            style={{
+              fontSize: 14,
+              color: '#4D85EE',
+              marginLeft: 5,
+              fontWeight: 'bold',
+            }}
+          >
+            ABERTURA
+          </strong>
+        </div>
+      );
+    }
+
+    if (op === 2) {
+      return (
+        <div
+          style={{
+            background: '#FAB0B0',
+            borderRadius: 50,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 130,
+            height: 27,
+          }}
+        >
+          <div
+            style={{
+              width: 8,
+              height: 8,
+              background: '#DE3B3B',
+              borderRadius: 50,
+            }}
+          />
+          <strong
+            style={{
+              fontSize: 14,
+              color: '#DE3B3B',
+              marginLeft: 5,
+              fontWeight: 'bold',
+            }}
+          >
+            SANGRIA
+          </strong>
+        </div>
+      );
+    }
+
+    if (op === 3) {
+      return (
+        <div
+          style={{
+            background: '#DFF0DF',
+            border: 1,
+            borderColor: '#DFF0DF',
+            borderRadius: 50,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 130,
+            height: 27,
+          }}
+        >
+          <div
+            style={{
+              width: 8,
+              height: 8,
+              background: '#2CA42B',
+              borderRadius: 50,
+            }}
+          />
+          <strong
+            style={{
+              fontSize: 14,
+              color: '#2CA42B',
+              marginLeft: 5,
+              fontWeight: 'bold',
+            }}
+          >
+            REFORÇO
+          </strong>
+        </div>
+      );
+    }
+
+    if (op === 4) {
+      return (
+        <div
+          style={{
+            background: '#F0F0DF',
+            border: 1,
+            borderColor: '#DFF0DF',
+            borderRadius: 50,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 130,
+            height: 27,
+          }}
+        >
+          <div
+            style={{
+              width: 8,
+              height: 8,
+              background: '#C1BC35',
+              borderRadius: 50,
+            }}
+          />
+          <strong
+            style={{
+              fontSize: 14,
+              color: '#C1BC35',
+              marginLeft: 5,
+              fontWeight: 'bold',
+            }}
+          >
+            FECHAMENTO
+          </strong>
+        </div>
+      );
+    }
+
+    return this;
+  }
+
+  const tableMemo = useMemo(
+    () => (
+      <TableOperations>
+        <li className="table-header">
+          <strong style={{ marginLeft: 5 }}>OPERAÇÃO</strong>
+          <strong>HORÁRIO</strong>
+          <strong>VALOR (R$)</strong>
+        </li>
+
+        <div className="result-table">
+          {operations.length >= 1 ? (
+            operations.map((op) => (
+              <li>
+                <div>{setStyle(op.operation)}</div>
+                <strong>{op.hour}</strong>
+                <strong>{op.value}</strong>
+              </li>
+            ))
+          ) : (
+            <div
+              style={{
+                width: 658,
+                height: 245,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <strong
+                style={{
+                  fontSize: 30,
+                  color: '#ccc',
+                }}
+              >
+                NENHUM RESULTADO
+              </strong>
+            </div>
+          )}
+        </div>
+      </TableOperations>
+    ),
+    [operations]
+  );
 
   return (
     <Container>
@@ -114,6 +342,7 @@ function ComOperations() {
             </div>
           </div>
         </Filters>
+        {tableMemo}
       </Content>
     </Container>
   );
