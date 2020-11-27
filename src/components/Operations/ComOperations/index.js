@@ -1,43 +1,17 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
+import { parseISO, format } from 'date-fns';
 import { MdFilterList, MdDone } from 'react-icons/md';
+
+import { formatPrice } from '../../../util/format';
 
 import { Container, Content, Filters, TableOperations } from './styles';
 
 function ComOperations() {
-  const [opened, setOpened] = useState(true);
+  const [opened, setOpened] = useState(false);
   const [bleed, setBleed] = useState(true);
   const [reinforcement, setReinforcement] = useState(true);
   const [closure, setClosure] = useState(true);
-  const [operations, setOperations] = useState([]);
-
-  useEffect(() => {
-    setOperations([
-      {
-        id: 1,
-        operation: 1,
-        hour: '8:10 hs',
-        value: 'R$ 40.00',
-      },
-      {
-        id: 2,
-        operation: 2,
-        hour: '14:16 hs',
-        value: 'R$ 10.00',
-      },
-      {
-        id: 3,
-        operation: 3,
-        hour: '14:45 hs',
-        value: 'R$ 10.00',
-      },
-      {
-        id: 4,
-        operation: 4,
-        hour: '18:05 hs',
-        value: 'R$ 3417.00',
-      },
-    ]);
-  }, []);
+  const operations = [];
 
   function handleOptions(op) {
     switch (op) {
@@ -232,8 +206,8 @@ function ComOperations() {
             operations.map((op) => (
               <li>
                 <div>{setStyle(op.operation)}</div>
-                <strong>{op.hour}</strong>
-                <strong>{op.value}</strong>
+                <strong>{format(parseISO(op.hour), "HH:mm 'hs'")}</strong>
+                <strong>{formatPrice(op.value)}</strong>
               </li>
             ))
           ) : (
