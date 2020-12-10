@@ -190,7 +190,7 @@ export const BoxFooter = styled.div`
             border-radius: 4px;
             height: 30px;
             margin-top: 5px;
-            padding: 0 10px;
+            padding-left: 10px;
           }
         }
       }
