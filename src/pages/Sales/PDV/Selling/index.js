@@ -88,6 +88,8 @@ function Selling() {
             <LineTableProducts
               onClick={() => {
                 setSelectedProduct(item);
+                const inputAmount = document.getElementById('amount');
+                inputAmount.focus();
               }}
               style={{
                 backgroundColor: `${
@@ -287,56 +289,62 @@ function Selling() {
             )}
           </div>
 
-          {selectedProduct && (
-            <BoxFooter>
-              <div className="footer-box-left">
-                <img
-                  src={
-                    selectedProduct
-                      ? selectedProduct.image
-                        ? selectedProduct.image.url
-                        : noImage
+          <BoxFooter style={{ display: selectedProduct ? 'flex' : 'none' }}>
+            <div className="footer-box-left">
+              <img
+                src={
+                  selectedProduct
+                    ? selectedProduct.image
+                      ? selectedProduct.image.url
                       : noImage
-                  }
-                  alt="noImage"
-                />
-              </div>
+                    : noImage
+                }
+                alt="noImage"
+              />
+            </div>
 
-              <div className="footer-box-right">
-                <Form onSubmit={addToItem}>
-                  <div className="form-box-top">
-                    <div className="input-block">
-                      <strong>ITEM</strong>
-                      <Input
-                        type="text"
-                        id="description"
-                        name="description"
-                        value={
-                          selectedProduct ? selectedProduct.description : ''
-                        }
-                        disabled
-                      />
-                    </div>
-
-                    <div className="input-block">
-                      <strong>QUANTIDADE</strong>
-                      <Input type="number" id="amount" name="amount" />
-                    </div>
-
-                    <div className="input-block">
-                      <strong>DESCONTO %</strong>
-                      <Input type="number" id="discount" name="discount" />
-                    </div>
+            <div className="footer-box-right">
+              <Form initialData={{ amount: 1 }} onSubmit={addToItem}>
+                <div className="form-box-top">
+                  <div className="input-block">
+                    <strong>ITEM</strong>
+                    <Input
+                      type="text"
+                      id="description"
+                      name="description"
+                      value={selectedProduct ? selectedProduct.description : ''}
+                      disabled
+                    />
                   </div>
 
-                  <button type="submit">
-                    <strong>INCLUIR ITEM</strong>
-                    <MdAddShoppingCart color="#fff" size={25} />
-                  </button>
-                </Form>
-              </div>
-            </BoxFooter>
-          )}
+                  <div className="input-block">
+                    <strong>QUANTIDADE</strong>
+                    <Input
+                      type="number"
+                      id="amount"
+                      name="amount"
+                      onBlur={() => {
+                        const inputDiscount = document.getElementById(
+                          'discount'
+                        );
+                        inputDiscount.focus();
+                      }}
+                    />
+                  </div>
+
+                  <div className="input-block">
+                    <strong>DESCONTO %</strong>
+                    <Input type="number" id="discount" name="discount" />
+                  </div>
+                </div>
+
+                <button type="submit">
+                  <strong>INCLUIR ITEM</strong>
+                  <MdAddShoppingCart color="#fff" size={25} />
+                </button>
+              </Form>
+            </div>
+          </BoxFooter>
         </BoxLeft>
 
         <BoxRight>
