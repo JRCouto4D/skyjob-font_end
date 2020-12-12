@@ -17,7 +17,10 @@ import NewCustomer from '../pages/Catalog/Customers/NewCustomer';
 import Budgets from '../pages/Sales/Budgets';
 import PDV from '../pages/Sales/PDV';
 import Selling from '../pages/Sales/PDV/Selling';
+
 import Returns from '../pages/Sales/Returns';
+import SetSale from '../pages/Sales/Returns/SetSale';
+
 import Payment from '../pages/Sales/PDV/Payment';
 
 import Operations from '../pages/Operations';
@@ -63,6 +66,7 @@ export default function Routes() {
       />
       <Route path="/pdv/payment" exact component={Payment} isPrivate />
       <Route path="/returns" exact component={Returns} isPrivate />
+      <Route path="/returns/setsale" exact component={SetSale} isPrivate />
 
       <Route path="/operations" exact component={Operations} isPrivate />
     </Switch>
