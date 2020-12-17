@@ -196,7 +196,7 @@ function Header() {
                 close();
                 handleSetColor(3);
               }}
-              to="/returns"
+              to="/returns/list"
             >
               DEVOLUÇÕES
             </Link>
