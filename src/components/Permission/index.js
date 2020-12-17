@@ -39,7 +39,7 @@ function Permission({ viewPermission, dataSale }) {
     }
 
     load();
-  }, []);
+  }, [company]);
 
   const handleCancel = useCallback(() => {
     setAnimation(1);
@@ -48,61 +48,65 @@ function Permission({ viewPermission, dataSale }) {
       setSelectedUser(null);
       viewPermission();
     }, 201);
-  }, []);
+  }, [viewPermission]);
 
-  async function handleSubmit() {
-    try {
-      setLoading(true);
+  const handleSubmit = useCallback(() => {
+    async function goSubmit() {
+      try {
+        setLoading(true);
 
-      if (selectedUser === null && password !== '') {
-        toast.error('O gerente é importante');
-        setError(1);
-        setLoading(false);
-        return;
-      }
-
-      if (password === '' && selectedUser !== null) {
-        toast.error('A senha do gerente é importante');
-        setError(2);
-
-        const input = document.getElementById('password');
-        input.style.borderColor = '#ff1e40';
-        setLoading(false);
-        return;
-      }
-
-      if (password === '' && selectedUser === null) {
-        toast.error('O gerente e a senha são importantes');
-        setError(3);
-        const input = document.getElementById('password');
-        input.style.borderColor = '#ff1e40';
-        setLoading(false);
-        return;
-      }
-
-      await api.get('/permission', {
-        params: {
-          user_id: selectedUser.id,
-          password,
-        },
-      });
-
-      await api.post(
-        `/point_sales/${dataSale.pdv}/return/sales/${dataSale.id}`,
-        {
-          authorized_id: selectedUser.id,
+        if (selectedUser === null && password !== '') {
+          toast.error('O gerente é importante');
+          setError(1);
+          setLoading(false);
+          return;
         }
-      );
-      setLoading(false);
-      history.push('/returns/list');
-      toast.success('A devolução foi completa com sucesso!!');
-    } catch (err) {
-      toast.error(
-        `Algo deu errado e não foi possível completar esta operação.`
-      );
-      viewPermission();
+
+        if (password === '' && selectedUser !== null) {
+          toast.error('A senha do gerente é importante');
+          setError(2);
+
+          const input = document.getElementById('password');
+          input.style.borderColor = '#ff1e40';
+          setLoading(false);
+          return;
+        }
+
+        if (password === '' && selectedUser === null) {
+          toast.error('O gerente e a senha são importantes');
+          setError(3);
+          const input = document.getElementById('password');
+          input.style.borderColor = '#ff1e40';
+          setLoading(false);
+          return;
+        }
+
+        await api.get('/permission', {
+          params: {
+            user_id: selectedUser.id,
+            password,
+          },
+        });
+
+        await api.post(
+          `/point_sales/${dataSale.pdv}/return/sales/${dataSale.id}`,
+          {
+            authorized_id: selectedUser.id,
+          }
+        );
+        setLoading(false);
+        history.push('/returns/list');
+        toast.success('A devolução foi completa com sucesso!!');
+      } catch (err) {
+        toast.error(
+          `Algo deu errado e não foi possível completar esta operação.`
+        );
+        viewPermission();
+      }
     }
-  }
+
+    goSubmit();
+  }, [dataSale, password, selectedUser, viewPermission]);
 
   const renderContainer = useMemo(
     () => (
@@ -192,7 +196,16 @@ function Permission({ viewPermission, dataSale }) {
         </div>
       </Container>
     ),
-    [password, error, animation, handleCancel, handleSubmit]
+    [
+      loading,
+      selectedUser,
+      users,
+      password,
+      error,
+      animation,
+      handleCancel,
+      handleSubmit,
+    ]
   );
 
   return (
