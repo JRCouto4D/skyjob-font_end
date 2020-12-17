@@ -1,16 +1,21 @@
 /* eslint-disable no-nested-ternary */
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { format, parseISO } from 'date-fns';
 
 import { formatPrice } from '../../../util/format';
 
+import Permission from '../../../components/Permission';
+
+import history from '../../../services/history';
+
 import { Container, Content, TableItens } from './styles';
 
 function Returns({ location }) {
-  console.tron.log(location.state);
   const itens = location.state ? location.state.dataItens : [];
   const sale = location.state ? location.state.dataSale : null;
+
+  const [viewPermission, setViewPermission] = useState(false);
 
   const memoList = useMemo(() => {
     return (
@@ -46,8 +51,12 @@ function Returns({ location }) {
     <Container>
       <Content>
         <header>
-          <strong>DEVOLUÇÃO</strong>
-          <h1>DE VENDAS</h1>
+          <div className="box-left">
+            <strong>DEVOLUÇÃO</strong>
+            <h1>DE VENDAS</h1>
+          </div>
+
+          {sale.canceled_at === null ? <div /> : <strong>ESTORNADA</strong>}
         </header>
 
         <div className="body">
@@ -89,7 +98,7 @@ function Returns({ location }) {
             <span>
               {sale
                 ? sale.payment === 2 && sale.installments
-                  ? `CRÉDIDO (${sale.installments})`
+                  ? `CRÉDIDO (${sale.installments}X)`
                   : sale.payment === 1
                   ? 'À VISTA'
                   : sale.payment === 3
@@ -134,14 +143,33 @@ function Returns({ location }) {
         {memoList}
 
         <footer>
-          <button type="button" className="cancel-button">
+          <button
+            type="button"
+            className="cancel-button"
+            onClick={() => history.push('/returns/list')}
+          >
             CANCELAR
           </button>
-          <button type="button" className="confirm-button">
+          <button
+            type="button"
+            className="confirm-button"
+            onClick={() => setViewPermission(true)}
+            disabled={sale && sale.canceled_at !== null}
+          >
             CONFIRMAR DEVOLUÇÃO
           </button>
         </footer>
       </Content>
+
+      {viewPermission && (
+        <Permission
+          viewPermission={() => setViewPermission(false)}
+          dataSale={{
+            id: sale.id,
+            pdv: sale.point_sale_id,
+          }}
+        />
+      )}
     </Container>
   );
 }

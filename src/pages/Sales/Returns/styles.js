@@ -54,6 +54,16 @@ export const Container = styled.div`
       :hover {
         background: ${darken(0.1, '#ff1e40')};
       }
+
+      :disabled {
+        cursor: default;
+        opacity: 0.4;
+
+        :hover {
+          background: #ff1e40;
+          opacity: 0.4;
+        }
+      }
     }
   }
 `;
@@ -71,16 +81,29 @@ export const Content = styled.div`
 
   header {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 
-    strong {
-      font-size: 16px;
-      color: #172c3d;
+    div.box-left {
+      display: flex;
+      flex-direction: column;
+
+      strong {
+        font-size: 16px;
+        color: #172c3d;
+      }
+
+      h1 {
+        font-size: 25px;
+        color: #ab0000;
+      }
     }
 
-    h1 {
-      font-size: 25px;
-      color: #ab0000;
+    > strong {
+      color: #ff1e40;
+      font-size: 18px;
+      text-decoration: underline;
     }
   }
 
