@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { MdClear } from 'react-icons/md';
+import { FaSpinner } from 'react-icons/fa';
 import { Input } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
 
 import history from '../../../../services/history';
 import api from '../../../../services/api';
 
-import { Modal, Container } from './styles';
+import { Modal, Container, Loading } from './styles';
 
 function SetSale() {
   const [sale_id, setSale_id] = useState('');
   const [animation, setAnimation] = useState(0);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const inputSetSale = document.getElementById('id_sale');
@@ -28,6 +30,7 @@ function SetSale() {
   const handleSubmit = useCallback(() => {
     async function loadDataSale() {
       try {
+        setLoading(true);
         let response = null;
 
         if (sale_id === '') {
@@ -60,6 +63,7 @@ function SetSale() {
         }
 
         setAnimation(2);
+        setLoading(false);
         setTimeout(() => {
           history.push('/returns', { dataSale, dataItens });
         }, 201);
@@ -68,6 +72,7 @@ function SetSale() {
           `Algo deu errado e não foi possível carregar os dados da venda.\n\n## ERRO: ${err} ##`
         );
         setSale_id('');
+        setLoading(false);
       }
     }
 
@@ -101,6 +106,8 @@ function SetSale() {
               handleSubmit();
             }
           }}
+          autoComplete="off"
+          autoCapitalize="off"
         />
 
         <div className="box-button">
@@ -116,12 +123,18 @@ function SetSale() {
             className="submit-button"
             onClick={handleSubmit}
           >
-            OK
+            {loading ? (
+              <Loading>
+                <FaSpinner size={20} color="#ddd" />
+              </Loading>
+            ) : (
+              'OK'
+            )}
           </button>
         </div>
       </Container>
     ),
-    [sale_id, error, animation, handleCancel, handleSubmit]
+    [sale_id, error, animation, handleCancel, handleSubmit, loading]
   );
 
   return (
