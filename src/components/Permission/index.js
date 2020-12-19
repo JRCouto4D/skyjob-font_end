@@ -92,6 +92,7 @@ function Permission({ viewPermission, dataSale }) {
           `/point_sales/${dataSale.pdv}/return/sales/${dataSale.id}`,
           {
             authorized_id: selectedUser.id,
+            company_id: company.id,
           }
         );
         setLoading(false);
@@ -106,7 +107,7 @@ function Permission({ viewPermission, dataSale }) {
     }
 
     goSubmit();
-  }, [dataSale, password, selectedUser, viewPermission]);
+  }, [dataSale, password, selectedUser, viewPermission, company]);
 
   const renderContainer = useMemo(
     () => (
