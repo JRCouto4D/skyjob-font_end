@@ -36,6 +36,8 @@ function Selling() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [amount, setAmount] = useState(1);
+  const [discount, setDiscount] = useState('');
 
   const { company } = useSelector((state) => state.user.profile);
   const { dataSale, itens } = useSelector((state) => state.saleData);
@@ -178,20 +180,20 @@ function Selling() {
     );
   }, [products, selectedProduct]);
 
-  function addToItem(data) {
+  function addToItem() {
     if (selectedProduct === null) {
       toast.error('Selecione o produto antes de incluir o item');
       return;
     }
 
-    if (data.amount === '') {
+    if (amount <= 0) {
       toast.error('A quantidade do item é obrigatoria');
       return;
     }
 
     if (
       selectedProduct.amount_stock <= 0 ||
-      data.amount > selectedProduct.amount_stock
+      amount > selectedProduct.amount_stock
     ) {
       toast.error('Produto em baixa no estoque');
       return;
@@ -200,15 +202,17 @@ function Selling() {
     const dataItem = {
       sale_id: dataSale.id,
       product_id: selectedProduct.id,
-      amount: data.amount,
-      discount: data.discount === '' ? 0 : data.discount,
-      subtotal: selectedProduct.retail_price * data.amount,
+      amount,
+      discount: discount === '' ? 0 : Number(discount),
+      subtotal: selectedProduct.retail_price * amount,
     };
 
     dispatch(addToItemRequest(dataItem));
     setSelectedProduct(null);
     setProducts([]);
     setSearch('');
+    setDiscount('');
+    setAmount(1);
   }
 
   function handleGoPayment() {
@@ -304,7 +308,7 @@ function Selling() {
             </div>
 
             <div className="footer-box-right">
-              <Form initialData={{ amount: 1 }} onSubmit={addToItem}>
+              <Form onSubmit={addToItem}>
                 <div className="form-box-top">
                   <div className="input-block">
                     <strong>ITEM</strong>
@@ -329,12 +333,20 @@ function Selling() {
                         );
                         inputDiscount.focus();
                       }}
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
                     />
                   </div>
 
                   <div className="input-block">
                     <strong>DESCONTO %</strong>
-                    <Input type="number" id="discount" name="discount" />
+                    <Input
+                      type="number"
+                      id="discount"
+                      name="discount"
+                      value={discount}
+                      onChange={(e) => setDiscount(e.target.value)}
+                    />
                   </div>
                 </div>
 
