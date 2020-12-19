@@ -35,23 +35,40 @@ export function* addToItem({ payload }) {
   try {
     const { sale_id, product_id, amount, discount, subtotal } = payload.data;
 
-    const response = yield call(
-      api.post,
-      `/addItem/sale/${sale_id}/product/${product_id}`,
-      {
-        amount,
-        discount,
-      }
+    const checkItem = yield call(
+      api.get,
+      `sale/${sale_id}/itens/${product_id}/list`
     );
 
-    const { item, sale, product } = response.data;
+    const dataItem = checkItem.data;
+    console.tron.log(dataItem);
 
-    const data = {
-      dataItem: { ...item, product, subtotal },
-      saleTotal: sale.total,
-    };
+    if (dataItem.length >= 1) {
+      const response = yield call(api.put, `/updateItem/${dataItem[0].id}`, {
+        amount: Number(dataItem[0].amount) + Number(amount),
+        discount,
+      });
 
-    yield put(addToItemSuccess(data));
+      yield put(editToItemSuccess(response.data));
+    } else {
+      const response = yield call(
+        api.post,
+        `/addItem/sale/${sale_id}/product/${product_id}`,
+        {
+          amount,
+          discount,
+        }
+      );
+
+      const { item, sale, product } = response.data;
+
+      const data = {
+        dataItem: { ...item, product, subtotal },
+        saleTotal: sale.total,
+      };
+
+      yield put(addToItemSuccess(data));
+    }
   } catch (err) {
     toast.error(`ALGO DEU ERRADO E O ITEM NÃO FOI ADICIONADO.\nERRO: ${err}`);
     yield put(addToItemFailure());
