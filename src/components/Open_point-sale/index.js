@@ -67,7 +67,7 @@ function OpenPointSale() {
   return (
     <Container>
       <Modal>
-        <button type="button" onClick={() => history.goBack()}>
+        <button type="button" onClick={() => history.push('/')}>
           <MdClear size={25} color="#fff" />
         </button>
 
