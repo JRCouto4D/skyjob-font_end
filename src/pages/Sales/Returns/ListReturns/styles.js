@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { lighten } from 'polished';
 
 export const Container = styled.div`
@@ -116,6 +116,12 @@ export const BoxNavigation = styled.div`
       :hover {
         background: ${lighten(0.05, '#ab0000')};
       }
+
+      :disabled {
+        opacity: 0.5;
+        cursor: default;
+        background: #ab0000;
+      }
     }
 
     strong {
@@ -151,7 +157,7 @@ export const Body = styled.div`
 
   ul {
     width: 100%;
-    height: 255px;
+    height: 360px;
 
     li.table-header {
       display: grid;
@@ -183,5 +189,28 @@ export const Body = styled.div`
         padding-bottom: 2.5px;
       }
     }
+  }
+`;
+
+const rotate = keyframes`
+  from{
+    transform: rotate(0deg)
+  }
+
+  to{
+    transform: rotate(360deg)
+  }
+`;
+
+export const Loading = styled.div`
+  width: 100%;
+  height: 300px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    animation: ${rotate} 1s linear infinite;
   }
 `;
