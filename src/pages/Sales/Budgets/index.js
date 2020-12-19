@@ -1,9 +1,13 @@
 import React from 'react';
 
-// import { Container } from './styles';
+import { Container } from './styles';
 
 function Budgets() {
-  return <div />;
+  return (
+    <Container>
+      <h1>Devoloções</h1>
+    </Container>
+  );
 }
 
 export default Budgets;

@@ -49,8 +49,6 @@ function ListSales() {
     setTotalSales();
   }, [loadSales]);
 
-  useEffect(() => console.tron.log(sales), [sales]);
-
   const listMemo = useMemo(
     () => (
       <ul>
