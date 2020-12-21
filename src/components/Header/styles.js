@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 export const Container = styled.div`
   width: 100%;
   min-width: 1000px;
-  padding: 3px;
+  padding: 0 10px;
   background: #fff;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
   margin-bottom: 15px;
@@ -61,7 +61,7 @@ export const Container = styled.div`
 
 export const LinkHome = styled(Link)`
   color: ${(props) => (props.setColor ? '#FF1E40' : '#0b2a32')};
-  font-size: 18px;
+  font-size: 15px;
   font-weight: bold;
 
   :hover {
@@ -73,7 +73,7 @@ export const ButtonMenu = styled.button`
   background: none;
   border: none;
   color: ${(props) => (props.setColor ? '#FF1E40' : '#0b2a32')};
-  font-size: 18px;
+  font-size: 15px;
   font-weight: bold;
 
   :hover {
@@ -111,7 +111,7 @@ export const BoxCatalog = styled.ul`
     a {
       color: #fff;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 15px;
       padding: 10px;
       flex: 1;
     }
@@ -148,7 +148,7 @@ export const BoxSales = styled.ul`
     a {
       color: #fff;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 15px;
       padding: 10px;
       flex: 1;
     }
