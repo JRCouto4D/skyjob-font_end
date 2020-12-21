@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { lighten, darken } from 'polished';
 
 export const Container = styled.div`
@@ -145,5 +145,28 @@ export const BoxRight = styled.div`
 
   img {
     height: 20px;
+  }
+`;
+
+const rotate = keyframes`
+  from{
+    transform: rotate(0deg)
+  }
+
+  to{
+    transform: rotate(360deg)
+  }
+`;
+
+export const Loading = styled.div`
+  width: 100%;
+  height: 300px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    animation: ${rotate} 1s linear infinite;
   }
 `;
