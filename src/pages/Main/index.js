@@ -8,6 +8,8 @@ import up from '../../assets/up.png';
 import history from '../../services/history';
 import api from '../../services/api';
 
+import { percentage3 } from '../../util/calcPercentage';
+
 import {
   Container,
   Content,
@@ -29,6 +31,10 @@ function Main() {
   const [activeProduct, setActiveProduct] = useState(0);
   const [loading, setLoading] = useState(false);
 
+  const [incash, setIncash] = useState(0);
+  const [credit, setCredit] = useState(0);
+  const [debit, setDebit] = useState(0);
+
   useEffect(() => {
     async function loadItens() {
       setLoading(true);
@@ -49,7 +55,27 @@ function Main() {
       setLoading(false);
     }
 
+    async function loadDataSale() {
+      setLoading(true);
+
+      const response = await api.get(`company/${company.id}/sales/list`);
+
+      const { sales, total } = response.data;
+
+      const cash = sales.filter((sale) => sale.payment === 1);
+      setIncash(percentage3(total, cash.length));
+
+      const crdt = sales.filter((sale) => sale.payment === 2);
+      setCredit(percentage3(total, crdt.length));
+
+      const dbt = sales.filter((sale) => sale.payment === 3);
+      setDebit(percentage3(total, dbt.length));
+
+      setLoading(false);
+    }
+
     loadItens();
+    loadDataSale();
   }, [company]);
 
   return (
@@ -167,17 +193,17 @@ function Main() {
               <body>
                 <div>
                   <strong>A VISTA</strong>
-                  <h2>35%</h2>
+                  <h2>{`${incash}%`}</h2>
                 </div>
 
                 <div>
                   <strong>CARTÃO DE CRÉDITO</strong>
-                  <h2>48%</h2>
+                  <h2>{`${credit}%`}</h2>
                 </div>
 
                 <div>
                   <strong>CARTÃO DÉBITO</strong>
-                  <h2>17%</h2>
+                  <h2>{`${debit}%`}</h2>
                 </div>
               </body>
             </BoxJob>
