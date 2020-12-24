@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { FaSpinner } from 'react-icons/fa';
+import {
+  isToday,
+  parseISO,
+  differenceInBusinessDays,
+  startOfMonth,
+  isThisMonth,
+  format,
+  isThisYear,
+  isBefore,
+} from 'date-fns';
+import pt from 'date-fns/locale/pt';
 
 import low from '../../assets/low.png';
 import up from '../../assets/up.png';
@@ -8,7 +19,12 @@ import up from '../../assets/up.png';
 import history from '../../services/history';
 import api from '../../services/api';
 
-import { percentage3 } from '../../util/calcPercentage';
+import {
+  percentage3,
+  percentage2,
+  percentage4,
+} from '../../util/calcPercentage';
+import { formatPriceNoDollarSign } from '../../util/format';
 
 import {
   Container,
@@ -35,6 +51,18 @@ function Main() {
   const [credit, setCredit] = useState(0);
   const [debit, setDebit] = useState(0);
 
+  const [totalCustomersDay, setTotalCustomersDay] = useState(0);
+  const [averageServend, setAverageServend] = useState('0%');
+  const [NegativeAverageServend, setNegativeAverageServend] = useState(false);
+
+  const [totalToday, setTotalToday] = useState('0,00');
+  const [averageBillingDay, setAverageBillingDay] = useState('0%');
+  const [negativeBillingDay, setNegativeBillingDay] = useState(false);
+
+  const [totalMonth, setTotalMonth] = useState('0,00');
+  const [averageBillingMonth, setAverageBillingMonth] = useState('0%');
+  const [negativeBillingMonth, setNegativeBillingMonth] = useState(false);
+
   useEffect(() => {
     async function loadItens() {
       setLoading(true);
@@ -56,20 +84,233 @@ function Main() {
     }
 
     async function loadDataSale() {
+      // This function will handle data regarding payment methods
+      function calcPaymentData(sales, total) {
+        // calculation of percentage of cash payments
+
+        const cash = sales.filter((sale) => sale.payment === 1);
+        setIncash(percentage3(total, cash.length));
+
+        // calculation of percentage of credit payments
+
+        const crdt = sales.filter((sale) => sale.payment === 2);
+        setCredit(percentage3(total, crdt.length));
+
+        // caculation of percentage of debit payments
+
+        const dbt = sales.filter((sale) => sale.payment === 3);
+        setDebit(percentage3(total, dbt.length));
+      }
+
+      // This function will handle billing data for that month
+      function calcBillingMonth(sales = [], callback, totalMonthSl) {
+        setTotalMonth(totalMonthSl);
+
+        const salesYear = sales.filter((sale) =>
+          isThisYear(parseISO(sale.complete_at))
+        );
+
+        if (salesYear.length <= 0) {
+          setNegativeBillingMonth(true);
+          setAverageBillingMonth('0%');
+          return;
+        }
+
+        const reducerCallback = (acumalator, currentValue) =>
+          isBefore(
+            parseISO(acumalator.complete_at),
+            parseISO(currentValue.complete_at)
+          )
+            ? acumalator
+            : currentValue;
+
+        const firstSaleYear = salesYear.reduce(reducerCallback);
+
+        const firstSaleMonth = Number(
+          format(parseISO(firstSaleYear.complete_at), 'MM')
+        );
+
+        const dtmonthsWorked = 12 - firstSaleMonth;
+
+        const monthsWorked =
+          dtmonthsWorked === 0 && totalMonthSl > 0 ? 1 : dtmonthsWorked;
+
+        const averageAnnual = salesYear.reduce(callback, 0);
+
+        const currentBillingAverage = averageAnnual / monthsWorked;
+
+        const monthsToEndTheYear = 12 - Number(format(new Date(), 'MM'));
+
+        const projectedAverage =
+          monthsToEndTheYear === 0
+            ? currentBillingAverage
+            : currentBillingAverage * monthsToEndTheYear;
+
+        if (totalMonthSl < projectedAverage) {
+          setNegativeBillingMonth(true);
+          setAverageBillingMonth(
+            `-${percentage2(projectedAverage, totalMonthSl)}%`
+          );
+        } else {
+          setNegativeBillingMonth(false);
+          setAverageBillingMonth(
+            `${percentage4(projectedAverage, totalMonthSl)}%`
+          );
+        }
+      }
+
+      // This function will handle data regarding the number of customers served
+      function calcCustomersServed(sales = [], monthSales = []) {
+        const servendToday = sales.length;
+        setTotalCustomersDay(servendToday);
+
+        if (monthSales.length <= 0) {
+          setNegativeAverageServend(false);
+          setAverageServend('0%');
+          return;
+        }
+
+        const reducerCallback = (acumalator, currentValue) =>
+          isBefore(
+            parseISO(acumalator.complete_at),
+            parseISO(currentValue.complete_at)
+          )
+            ? acumalator
+            : currentValue;
+
+        const firstSaleMonth = monthSales.reduce(reducerCallback);
+
+        const dtworkingDays = differenceInBusinessDays(
+          parseISO(firstSaleMonth.complete_at),
+          new Date()
+        );
+
+        const workingDays = dtworkingDays === 0 ? 1 : dtworkingDays;
+
+        const untilDayBefore = monthSales.filter(
+          (sale) => !isToday(parseISO(sale.complete_at))
+        );
+
+        console.tron.log({
+          uteis: workingDays,
+          clientes: untilDayBefore.length,
+          media: untilDayBefore.length,
+        });
+
+        const billingServend =
+          untilDayBefore.length <= 0
+            ? servendToday
+            : untilDayBefore.length / workingDays;
+
+        console.tron.log({
+          hj: servendToday,
+          media: billingServend,
+        });
+
+        if (servendToday < billingServend) {
+          setNegativeAverageServend(true);
+          setAverageServend(`-${percentage2(servendToday, billingServend)}%`);
+        } else {
+          setNegativeAverageServend(false);
+          setAverageServend(`${percentage4(billingServend, servendToday)}%`);
+        }
+      }
+
+      // This function will handle data related to the day's billing
+      function calcTotalSalesToday(sales, callback) {
+        const todaySales = sales.filter((sale) =>
+          isToday(parseISO(sale.complete_at))
+        );
+
+        const totalTodaySl =
+          todaySales.length <= 0 ? 0 : todaySales.reduce(callback, 0);
+        const formatedTotal = formatPriceNoDollarSign(totalTodaySl);
+
+        setTotalToday(formatedTotal);
+
+        const monthSales = sales.filter((sale) =>
+          isThisMonth(parseISO(sale.complete_at))
+        );
+
+        /* calculate average sales per day this month */
+
+        const reducerCallback = (acumalator, currentValue) =>
+          isBefore(
+            parseISO(acumalator.complete_at),
+            parseISO(currentValue.complete_at)
+          )
+            ? acumalator
+            : currentValue;
+
+        const firstSaleMonth = monthSales.reduce(reducerCallback);
+
+        const dtworkingDays = differenceInBusinessDays(
+          new Date(),
+          parseISO(firstSaleMonth.complete_at)
+        );
+
+        const workingDays = dtworkingDays;
+
+        const untilDayBefore = monthSales.filter(
+          (sale) => !isToday(parseISO(sale.complete_at))
+        );
+
+        const totalMonthSl =
+          untilDayBefore.length <= 0 ? 0 : untilDayBefore.reduce(callback, 0);
+
+        if (totalMonthSl === 0 && totalTodaySl === 0) {
+          setNegativeBillingDay(false);
+          setAverageBillingDay('0%');
+          return;
+        }
+
+        const averageDay =
+          totalMonthSl <= 0 ? totalTodaySl : totalMonthSl / workingDays;
+
+        console.tron.log({
+          vendasAteOntem: totalMonthSl,
+          vendasDoMes: totalTodaySl,
+          diasUteis: workingDays,
+          media: averageDay,
+        });
+
+        if (averageDay > totalTodaySl) {
+          setNegativeBillingDay(true);
+          setAverageBillingDay(`-${percentage2(averageDay, totalTodaySl)}%`);
+        } else {
+          setNegativeBillingDay(false);
+          setAverageBillingDay(`${percentage4(averageDay, totalTodaySl)}%`);
+        }
+
+        // calculate billing in the month
+
+        calcBillingMonth(sales, callback, totalMonthSl);
+
+        calcCustomersServed(todaySales, monthSales);
+      }
+
+      // reducer callback
+
+      const reducer = (acumalator, currentValue) =>
+        acumalator + currentValue.total;
+
       setLoading(true);
 
       const response = await api.get(`company/${company.id}/sales/list`);
 
-      const { sales, total } = response.data;
+      const { sales: dtSales, total: ttal } = response.data;
 
-      const cash = sales.filter((sale) => sale.payment === 1);
-      setIncash(percentage3(total, cash.length));
+      if (ttal === 0) {
+        return;
+      }
 
-      const crdt = sales.filter((sale) => sale.payment === 2);
-      setCredit(percentage3(total, crdt.length));
+      // calculate payment data
 
-      const dbt = sales.filter((sale) => sale.payment === 3);
-      setDebit(percentage3(total, dbt.length));
+      calcPaymentData(dtSales, ttal);
+
+      // calculating total sales made today && average billing in the month
+
+      calcTotalSalesToday(dtSales, reducer);
 
       setLoading(false);
     }
@@ -122,7 +363,9 @@ function Main() {
           <BlockJob>
             <BoxJob setColor="#00bfdd" popup={2}>
               <header>
-                <h1>VENDAS</h1>
+                <h1>{`VENDAS - ${format(new Date(), 'MMMM', {
+                  locale: pt,
+                }).toUpperCase()}`}</h1>
               </header>
 
               <body>
@@ -131,26 +374,26 @@ function Main() {
                     <strong>HOJE</strong>
                     <Block setColor="#00bfdd">
                       <span>R$</span>
-                      <h2>0,00</h2>
+                      <h2>{totalToday}</h2>
                     </Block>
                   </BoxLeft>
                   <BoxRight>
-                    <span>-100%</span>
-                    <img src={low} alt="" />
+                    <span>{averageBillingDay}</span>
+                    <img src={negativeBillingDay ? low : up} alt="" />
                   </BoxRight>
                 </BoxItem>
 
                 <BoxItem>
                   <BoxLeft>
-                    <strong>SETEMBRO</strong>
+                    <strong>FATURAMENTO NO MÊS</strong>
                     <Block setColor="#00bfdd">
                       <span>R$</span>
-                      <h2>1200,00</h2>
+                      <h2>{totalMonth}</h2>
                     </Block>
                   </BoxLeft>
                   <BoxRight>
-                    <span>35%</span>
-                    <img src={up} alt="" />
+                    <span>{averageBillingMonth}</span>
+                    <img src={negativeBillingMonth ? low : up} alt="" />
                   </BoxRight>
                 </BoxItem>
 
@@ -158,12 +401,12 @@ function Main() {
                   <BoxLeft>
                     <strong>CLIENTES ATENDIDOS HOJE</strong>
                     <Block setColor="#00bfdd">
-                      <h2>0</h2>
+                      <h2>{totalCustomersDay}</h2>
                     </Block>
                   </BoxLeft>
                   <BoxRight>
-                    <span>-100%</span>
-                    <img src={low} alt="" />
+                    <span>{averageServend}</span>
+                    <img src={NegativeAverageServend ? low : up} alt="" />
                   </BoxRight>
                 </BoxItem>
               </body>
