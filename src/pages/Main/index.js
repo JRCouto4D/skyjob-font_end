@@ -135,26 +135,41 @@ function Main() {
         const monthsWorked =
           dtmonthsWorked === 0 && totalMonthSl > 0 ? 1 : dtmonthsWorked;
 
-        const averageAnnual = salesYear.reduce(callback, 0);
+        const billingUntilLastMonth = salesYear.filter(
+          (sale) => !isThisMonth(parseISO(sale.complete_at))
+        );
+
+        const averageAnnual =
+          billingUntilLastMonth.length <= 0
+            ? 0
+            : billingUntilLastMonth.reduce(callback, 0);
 
         const currentBillingAverage = averageAnnual / monthsWorked;
 
-        const monthsToEndTheYear = 12 - Number(format(new Date(), 'MM'));
+        console.tron.log({
+          label: 'dados do mes',
+          inicio: firstSaleMonth,
+          paraFimDoAno: monthsWorked,
+          faturamentoAnumal: averageAnnual,
+          paraProximoMes: currentBillingAverage,
+          vendasDoMes: totalMonthSl,
+        });
 
-        const projectedAverage =
-          monthsToEndTheYear === 0
-            ? currentBillingAverage
-            : currentBillingAverage * monthsToEndTheYear;
+        if (currentBillingAverage <= 0) {
+          setNegativeBillingMonth(false);
+          setAverageBillingMonth('0%');
+          return;
+        }
 
-        if (totalMonthSl < projectedAverage) {
+        if (totalMonthSl < currentBillingAverage) {
           setNegativeBillingMonth(true);
           setAverageBillingMonth(
-            `-${percentage2(projectedAverage, totalMonthSl)}%`
+            `-${percentage2(currentBillingAverage, totalMonthSl)}%`
           );
         } else {
           setNegativeBillingMonth(false);
           setAverageBillingMonth(
-            `${percentage4(projectedAverage, totalMonthSl)}%`
+            `${percentage4(currentBillingAverage, totalMonthSl)}%`
           );
         }
       }
@@ -191,21 +206,10 @@ function Main() {
           (sale) => !isToday(parseISO(sale.complete_at))
         );
 
-        console.tron.log({
-          uteis: workingDays,
-          clientes: untilDayBefore.length,
-          media: untilDayBefore.length,
-        });
-
         const billingServend =
           untilDayBefore.length <= 0
             ? servendToday
             : untilDayBefore.length / workingDays;
-
-        console.tron.log({
-          hj: servendToday,
-          media: billingServend,
-        });
 
         if (servendToday < billingServend) {
           setNegativeAverageServend(true);
@@ -268,6 +272,7 @@ function Main() {
           totalMonthSl <= 0 ? totalTodaySl : totalMonthSl / workingDays;
 
         console.tron.log({
+          label: 'dados do dia',
           vendasAteOntem: totalMonthSl,
           vendasDoMes: totalTodaySl,
           diasUteis: workingDays,
@@ -284,7 +289,7 @@ function Main() {
 
         // calculate billing in the month
 
-        calcBillingMonth(sales, callback, totalMonthSl);
+        calcBillingMonth(sales, callback, monthSales.reduce(callback, 0));
 
         calcCustomersServed(todaySales, monthSales);
       }
