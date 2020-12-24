@@ -5,7 +5,7 @@ import {
   isToday,
   parseISO,
   differenceInBusinessDays,
-  startOfMonth,
+  // startOfMonth,
   isThisMonth,
   format,
   isThisYear,
@@ -196,27 +196,42 @@ function Main() {
         const firstSaleMonth = monthSales.reduce(reducerCallback);
 
         const dtworkingDays = differenceInBusinessDays(
-          parseISO(firstSaleMonth.complete_at),
-          new Date()
+          new Date(),
+          parseISO(firstSaleMonth.complete_at)
         );
 
-        const workingDays = dtworkingDays === 0 ? 1 : dtworkingDays;
-
-        const untilDayBefore = monthSales.filter(
+        const salesUntilYesterday = monthSales.filter(
           (sale) => !isToday(parseISO(sale.complete_at))
         );
 
-        const billingServend =
-          untilDayBefore.length <= 0
-            ? servendToday
-            : untilDayBefore.length / workingDays;
+        const servendUntilYesterday =
+          salesUntilYesterday.length <= 0 ? 0 : salesUntilYesterday.length;
 
-        if (servendToday < billingServend) {
+        const workingDays = dtworkingDays === 0 ? 1 : dtworkingDays;
+
+        const averageCustomer =
+          servendUntilYesterday <= 0
+            ? servendToday
+            : servendUntilYesterday / workingDays;
+
+        console.tron.log({
+          label: 'Clientes atendidos',
+          primeiraVenda: format(
+            parseISO(firstSaleMonth.complete_at),
+            'dd/MM/yyyy'
+          ),
+          diasUteis: workingDays,
+          vendasAteOntem: servendUntilYesterday,
+          mediaClientesHj: averageCustomer,
+          clientesHj: sales.length,
+        });
+
+        if (servendToday < averageCustomer) {
           setNegativeAverageServend(true);
-          setAverageServend(`-${percentage2(servendToday, billingServend)}%`);
+          setAverageServend(`-${percentage2(averageCustomer, servendToday)}%`);
         } else {
           setNegativeAverageServend(false);
-          setAverageServend(`${percentage4(billingServend, servendToday)}%`);
+          setAverageServend(`${percentage4(averageCustomer, servendToday)}%`);
         }
       }
 
@@ -291,7 +306,7 @@ function Main() {
 
         calcBillingMonth(sales, callback, monthSales.reduce(callback, 0));
 
-        calcCustomersServed(todaySales, monthSales);
+        calcCustomersServed(todaySales, untilDayBefore);
       }
 
       // reducer callback
@@ -308,6 +323,11 @@ function Main() {
       if (ttal === 0) {
         return;
       }
+
+      console.tron.log({
+        vendas: dtSales,
+        total: ttal,
+      });
 
       // calculate payment data
 
