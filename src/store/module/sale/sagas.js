@@ -18,10 +18,11 @@ import history from '../../../services/history';
 
 export function* startSale({ payload }) {
   try {
-    const { pdv_id, type_sale } = payload.data;
+    const { pdv_id, type_sale, company_id } = payload.data;
 
     const response = yield call(api.post, `/point_sales/${pdv_id}/sale/start`, {
       type_sale,
+      company_id,
     });
 
     yield put(startSaleSuccess(response.data));
