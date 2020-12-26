@@ -8,9 +8,12 @@ import { lighten } from 'polished';
 
 import { formatPrice } from '../../../../util/format';
 import { percentage } from '../../../../util/calcPercentage';
+
 import api from '../../../../services/api';
 import history from '../../../../services/history';
+
 import ImageInput from './ImageInput';
+
 import {
   Container,
   Modal,
@@ -31,10 +34,12 @@ import {
   TextProfit,
   InputBlockAmount,
   BlockAmount,
+  StockMoviment,
 } from './styles';
 
 function NewProduct({ location }) {
   const [active, setActive] = useState(false);
+  const [activeMoviment, setActiveMoviment] = useState(true);
   const { company } = useSelector((state) => state.user.profile);
 
   const [name, setName] = useState('');
@@ -58,6 +63,19 @@ function NewProduct({ location }) {
 
   const [percentRetail, setPercentRetail] = useState('N/D');
   const [percentWholesale, setPercentWholesale] = useState('N/D');
+
+  const [selectedMoviment, setSelectedMoviment] = useState(0);
+
+  const moviment = [
+    {
+      id: 1,
+      label: 'ENTRADA',
+    },
+    {
+      id: 2,
+      label: 'SAÍDA',
+    },
+  ];
 
   const [includeType, setIncludeType] = useState(null);
 
@@ -83,7 +101,6 @@ function NewProduct({ location }) {
   }
 
   async function handleSubmit(data) {
-    console.tron.log(data);
     if (data.description === '') {
       setDataError(1);
       const input = document.getElementById('description');
@@ -714,6 +731,85 @@ function NewProduct({ location }) {
                   </BlockAmount>
                 </div>
               </BoxPrice>
+
+              <StockMoviment>
+                <div className="stock-moviment-header">
+                  <div className="active-moviment">
+                    <h1>MOVIMENTAR ESTOQUE</h1>
+                    <ButtonActive
+                      active={activeMoviment}
+                      type="button"
+                      onClick={() => setActiveMoviment(!activeMoviment)}
+                    >
+                      <div>
+                        <div>
+                          <div />
+                        </div>
+                      </div>
+                    </ButtonActive>
+                  </div>
+                  <span>
+                    Ao ativar este recurso o sistema movimentará o estoque deste
+                    produto, automaticamente, sempre que uma compra ou venda for
+                    realizada
+                  </span>
+                </div>
+
+                <div className="stock-moviment-content">
+                  <div className="input-block-center">
+                    <strong>ATUAL</strong>
+                    <Input
+                      type="number"
+                      className="current-amount"
+                      id="current-amount"
+                      name="current-amount"
+                      autoCapitalize="off"
+                      autoComplete="off"
+                      placeholder="100"
+                      disabled
+                    />
+                  </div>
+
+                  <InputBlock>
+                    {dataError === 4 ? (
+                      <strong style={{ color: '#FF1E40' }}>* UNIDADE</strong>
+                    ) : (
+                      <strong style={{ color: '#666', fontSize: 16 }}>
+                        MOVIMENTO DE:
+                      </strong>
+                    )}
+                    <Box>
+                      <Select
+                        value={selectedMoviment}
+                        options={moviment}
+                        getOptionValue={(op) => op.id}
+                        getOptionLabel={(op) => op.label}
+                        onChange={(value) => {
+                          setSelectedMoviment({
+                            id: value.id,
+                            label: value.label,
+                          });
+
+                          const input = document.getElementById('set-amount');
+                          input.focus();
+                        }}
+                      />
+                    </Box>
+                  </InputBlock>
+
+                  <div className="input-block">
+                    <strong>QUANTIDADE</strong>
+                    <Input
+                      type="number"
+                      id="set-amount"
+                      name="set-amount"
+                      autoCapitalize="off"
+                      autoComplete="off"
+                      placeholder="01"
+                    />
+                  </div>
+                </div>
+              </StockMoviment>
 
               <button className="button-submit" type="submit">
                 SALVAR

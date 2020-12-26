@@ -27,8 +27,11 @@ export const Modal = styled.div`
 
 export const Content = styled.div`
   width: 80%;
+  max-height: 50vw;
+  overflow: auto;
   background: #fff;
   border-radius: 4px;
+  scrollbar-color: inherit;
 
   header {
     display: flex;
@@ -58,7 +61,7 @@ export const Content = styled.div`
   }
 
   main {
-    padding: 25px;
+    padding: 15px;
 
     form {
       div.box-top {
@@ -76,7 +79,7 @@ export const Content = styled.div`
         border: none;
         width: 100%;
         height: 45px;
-        margin-top: 20px;
+        margin-top: 30px;
         color: #fff;
         font-size: 18px;
         font-weight: bold;
@@ -236,7 +239,7 @@ export const Box = styled.div`
 `;
 
 export const BoxPrice = styled.div`
-  margin-top: 20px;
+  margin-top: 10px;
 
   > h1 {
     font-size: 20px;
@@ -391,6 +394,86 @@ export const BlockAmount = styled.div`
 
     :disabled {
       opacity: 0.3;
+    }
+  }
+`;
+
+export const StockMoviment = styled.div`
+  margin-top: 10px;
+
+  div.stock-moviment-header {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+
+    > span {
+      margin-top: 5px;
+      display: block;
+      color: #ccc;
+    }
+  }
+
+  div.active-moviment {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+
+    > h1 {
+      font-size: 20px;
+      color: #333;
+    }
+  }
+
+  div.stock-moviment-content {
+    display: grid;
+    grid-template-columns: 110px 3fr 1fr;
+    grid-column-gap: 20px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+
+    div.input-block-center {
+      display: flex;
+      flex-direction: column;
+
+      strong {
+        font-size: 16px;
+        color: #666;
+        display: block;
+      }
+
+      > input.current-amount {
+        border: none;
+        border-radius: 4px;
+        height: 35px;
+        margin-top: 5px;
+        font-size: 20px;
+        background: none;
+        color: #333;
+
+        ::placeholder {
+          color: #333;
+        }
+      }
+    }
+
+    div.input-block {
+      display: flex;
+      flex-direction: column;
+
+      strong {
+        font-size: 16px;
+        color: #666;
+      }
+
+      > input {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        height: 35px;
+        padding: 0 10px;
+        margin-top: 5px;
+        text-align: right;
+      }
     }
   }
 `;
