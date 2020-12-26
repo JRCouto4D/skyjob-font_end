@@ -8,11 +8,12 @@ import StartSale from './StartSale';
 import { Container } from './styles';
 
 function PDV() {
-  const { open } = useSelector((state) => state.statusPDV);
+  const { open, pdv } = useSelector((state) => state.statusPDV);
+  const { company } = useSelector((state) => state.user.profile);
 
   return (
     <Container>
-      {open ? (
+      {open && pdv.company_id === company.id ? (
         <BoxPDV poup>
           <StartSale />
         </BoxPDV>

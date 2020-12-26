@@ -9,12 +9,18 @@ import { resetDataSale } from '../sale/actions';
 
 export function* openPDV({ payload }) {
   try {
-    const { user_id, cash_register_id, initial_value } = payload.data;
+    const {
+      user_id,
+      cash_register_id,
+      initial_value,
+      company_id,
+    } = payload.data;
 
     const response = yield call(api.post, '/point_sales/start', {
       user_id,
       cash_register_id,
       initial_value,
+      company_id,
     });
 
     yield put(openPdvSuccess(response.data));
