@@ -4,6 +4,7 @@ import { MdClear, MdAdd } from 'react-icons/md';
 import { Form, Input } from '@rocketseat/unform';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { lighten } from 'polished';
 
 import { formatPrice } from '../../../../util/format';
 import { percentage } from '../../../../util/calcPercentage';
@@ -33,8 +34,12 @@ import {
 } from './styles';
 
 function NewProduct({ location }) {
-  const [active, setActive] = useState(true);
+  const [active, setActive] = useState(false);
   const { company } = useSelector((state) => state.user.profile);
+
+  const [name, setName] = useState('');
+  const [erro, setErro] = useState(false);
+  const [dataError, setDataError] = useState(0);
 
   const [categories, setCategories] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(0);
@@ -67,6 +72,9 @@ function NewProduct({ location }) {
   function calcWholesale() {
     percentageWholesale(cust_price, formated_wholesale);
     setFormated_wholesale(formatPrice(formated_wholesale));
+
+    const input = document.getElementById('minimum_wholesale');
+    input.focus();
   }
 
   function calcRetail() {
@@ -77,27 +85,42 @@ function NewProduct({ location }) {
   async function handleSubmit(data) {
     console.tron.log(data);
     if (data.description === '') {
-      toast.error('A descrição do produto é obrigatorio');
+      setDataError(1);
+      const input = document.getElementById('description');
+      input.focus();
+      input.style.borderColor = '#FF1E40';
+      input.style.background = lighten(0.4, '#FF1E40');
+
+      toast.error('A descrição do produto é obrigatório');
       return;
     }
 
     if (selectedCategory === 0) {
-      toast.error('A categoria do produto é obrigatoria');
+      setDataError(2);
+      toast.error('A categoria do produto é obrigatória');
       return;
     }
 
     if (selectedProvider === 0) {
-      toast.error('O fornecedor do produto é obrigatorio');
+      setDataError(3);
+      toast.error('O fornecedor do produto é obrigatório');
       return;
     }
 
     if (selectedUnit === 0) {
-      toast.error('A unidade do produto é obrigatoria');
+      setDataError(4);
+      toast.error('A unidade do produto é obrigatória');
       return;
     }
 
     if (retail_price === 0 || retail_price === null || retail_price === '') {
-      toast.error('O preço de varejo é obrigatorio');
+      setDataError(5);
+      const input = document.getElementById('retail_price');
+      input.focus();
+      input.style.borderColor = '#FF1E40';
+      input.style.background = lighten(0.4, '#FF1E40');
+
+      toast.error('O preço de varejo é obrigatório');
       return;
     }
 
@@ -106,9 +129,13 @@ function NewProduct({ location }) {
       wholesale_price === null ||
       wholesale_price === ''
     ) {
-      toast.error(
-        'A venda em atacado está ativada, o preço para vendas em atavado é obrigatorio'
-      );
+      setDataError(6);
+
+      const input = document.getElementById('wholesale_price');
+      input.focus();
+      input.style.borderColor = '#FF1E40';
+      input.style.background = lighten(0.4, '#FF1E40');
+      toast.error('Informe o preço para vendas em atavado.');
       return;
     }
 
@@ -117,7 +144,12 @@ function NewProduct({ location }) {
       data.minimum_stock === null ||
       data.minimum_stock === ''
     ) {
-      toast.error('A quantidade minima em stock é obrigatoria');
+      setDataError(7);
+      const input = document.getElementById('minimum_stock');
+      input.focus();
+      input.style.borderColor = '#FF1E40';
+      input.style.background = lighten(0.4, '#FF1E40');
+      toast.error('A quantidade minima em estoque é obrigatória');
       return;
     }
 
@@ -126,9 +158,13 @@ function NewProduct({ location }) {
       data.minimum_wholesale === null ||
       data.minimum_wholesale === 0
     ) {
-      toast.error(
-        'A venda em atacado está ativada, neste caso o quantidade minimum para venda em atacado é necessaria'
-      );
+      setDataError(8);
+
+      const input = document.getElementById('minimum_wholesale');
+      input.focus();
+      input.style.borderColor = '#FF1E40';
+      input.style.background = lighten(0.4, '#FF1E40');
+      toast.error('Informe a quantidade minimum para venda em atacado.');
       return;
     }
 
@@ -241,7 +277,7 @@ function NewProduct({ location }) {
     }
   }, [loadCategories, loadProviders, loadUnits, location]);
 
-  async function handleInclude(data) {
+  async function handleInclude() {
     switch (includeType) {
       case 0: {
         close();
@@ -250,12 +286,26 @@ function NewProduct({ location }) {
 
       case 1: {
         try {
-          await api.post(`/company/${company.id}/categories`, data);
+          if (name === '') {
+            toast.error('O nome da categoria é obrigatório.');
+            setErro(true);
+
+            const inputName = document.getElementById('name');
+
+            inputName.focus();
+            inputName.style.borderColor = '#FF1E40';
+            inputName.style.background = lighten(0.4, '#FF1E40');
+            return;
+          }
+
+          await api.post(`/company/${company.id}/categories`, { name });
           loadCategories();
           toast.success('Categoria incluida com sucesso!');
+          setName('');
           close();
         } catch (err) {
           toast.error('Algo deu errado, por favor tente mais tarde');
+          setName('');
           close();
         }
         break;
@@ -263,25 +313,51 @@ function NewProduct({ location }) {
 
       case 2: {
         try {
-          await api.post(`/company/${company.id}/providers`, data);
+          if (name === '') {
+            toast.error('O nome do fornecedor é obrigatório.');
+            setErro(true);
+
+            const inputName = document.getElementById('name');
+
+            inputName.focus();
+            inputName.style.borderColor = '#FF1E40';
+            inputName.style.background = lighten(0.4, '#FF1E40');
+            return;
+          }
+          await api.post(`/company/${company.id}/providers`, { name });
           loadProviders();
           toast.success('Fornecedor incluido com sucesso!');
+          setName('');
           close();
         } catch (err) {
           toast.error('Algo deu errado, por favor tente mais tarde');
           close();
+          setName('');
         }
         break;
       }
 
       case 3: {
         try {
-          await api.post(`/company/${company.id}/units`, data);
+          if (name === '') {
+            toast.error('O nome da unidade é obrigatório.');
+            setErro(true);
+
+            const inputName = document.getElementById('name');
+
+            inputName.focus();
+            inputName.style.borderColor = '#FF1E40';
+            inputName.style.background = lighten(0.4, '#FF1E40');
+            return;
+          }
+          await api.post(`/company/${company.id}/units`, { name });
           loadUnits();
           toast.success('Unidade incluida com sucesso!');
+          setName('');
           close();
         } catch (err) {
           toast.error('Algo deu errado, por favor tente mais tarde');
+          setName('');
           close();
         }
         break;
@@ -289,6 +365,13 @@ function NewProduct({ location }) {
       default:
     }
   }
+
+  useEffect(() => {
+    if (includeType !== null) {
+      const inputName = document.getElementById('name');
+      inputName.focus();
+    }
+  }, [includeType]);
 
   return (
     <Container>
@@ -332,7 +415,11 @@ function NewProduct({ location }) {
 
                 <BoxDescription>
                   <InputBlock>
-                    <strong>DESCRIÇÃO</strong>
+                    {dataError === 1 ? (
+                      <strong style={{ color: '#FF1E40' }}>* DESCRIÇÃO</strong>
+                    ) : (
+                      <strong>DESCRIÇÃO</strong>
+                    )}
                     <Input
                       type="text"
                       id="description"
@@ -340,12 +427,24 @@ function NewProduct({ location }) {
                       placeholder="Ex: Tênis Nike Air Max"
                       autoCapitalize="off"
                       autoComplete="off"
+                      onChange={() => {
+                        const input = document.getElementById('description');
+                        setDataError(0);
+                        input.style.borderColor = '#ddd';
+                        input.style.background = 'none';
+                      }}
                     />
                   </InputBlock>
 
                   <BlockSelect>
                     <InputBlock>
-                      <strong>CATEGORIA</strong>
+                      {dataError === 2 ? (
+                        <strong style={{ color: '#FF1E40' }}>
+                          * CATEGORIA
+                        </strong>
+                      ) : (
+                        <strong>CATEGORIA</strong>
+                      )}
                       <Box>
                         <Select
                           value={selectedCategory}
@@ -353,6 +452,7 @@ function NewProduct({ location }) {
                           getOptionValue={(op) => op.id}
                           getOptionLabel={(op) => op.name}
                           onChange={(value) => {
+                            setDataError(0);
                             setSelectedCategory({
                               id: value.id,
                               name: value.name,
@@ -372,7 +472,13 @@ function NewProduct({ location }) {
                     </InputBlock>
 
                     <InputBlock>
-                      <strong>FORNECEDORES</strong>
+                      {dataError === 3 ? (
+                        <strong style={{ color: '#FF1E40' }}>
+                          * FORNECEDOR
+                        </strong>
+                      ) : (
+                        <strong>FORNECEDOR</strong>
+                      )}
                       <Box>
                         <Select
                           value={selectedProvider}
@@ -380,6 +486,7 @@ function NewProduct({ location }) {
                           getOptionValue={(op) => op.id}
                           getOptionLabel={(op) => op.name}
                           onChange={(value) => {
+                            setDataError(0);
                             setSelectedProvider({
                               id: value.id,
                               name: value.name,
@@ -399,7 +506,11 @@ function NewProduct({ location }) {
                     </InputBlock>
 
                     <InputBlock>
-                      <strong>UNIDADE</strong>
+                      {dataError === 4 ? (
+                        <strong style={{ color: '#FF1E40' }}>* UNIDADE</strong>
+                      ) : (
+                        <strong>UNIDADE</strong>
+                      )}
                       <Box>
                         <Select
                           value={selectedUnit}
@@ -407,6 +518,7 @@ function NewProduct({ location }) {
                           getOptionValue={(op) => op.id}
                           getOptionLabel={(op) => op.name}
                           onChange={(value) => {
+                            setDataError(0);
                             setSelectedUnit({
                               id: value.id,
                               name: value.name,
@@ -443,7 +555,13 @@ function NewProduct({ location }) {
                     <OthersPrices>
                       <div>
                         <InputBlockPrice>
-                          <strong>VENDA VAREJO</strong>
+                          {dataError === 5 ? (
+                            <strong style={{ color: '#FF1E40' }}>
+                              * VENDA VAREJO
+                            </strong>
+                          ) : (
+                            <strong>VENDA VAREJO</strong>
+                          )}
                           <Input
                             type="text"
                             id="retail_price"
@@ -452,8 +570,18 @@ function NewProduct({ location }) {
                             value={formated_retail}
                             onFocus={() => setFormated_retail('')}
                             onChange={(e) => {
-                              setFormated_retail(e.target.value);
-                              setRetail_price(e.target.value);
+                              setFormated_retail(
+                                e.target.value.toString().replace(',', '.')
+                              );
+                              setRetail_price(
+                                e.target.value.toString().replace(',', '.')
+                              );
+                              setDataError(0);
+                              const input = document.getElementById(
+                                'retail_price'
+                              );
+                              input.style.borderColor = '#ddd';
+                              input.style.background = 'none';
                             }}
                             onBlur={calcRetail}
                             autoCapitalize="off"
@@ -480,7 +608,13 @@ function NewProduct({ location }) {
 
                       <div>
                         <InputBlockPrice active={!active}>
-                          <strong>VENDA ATACADO</strong>
+                          {dataError === 6 ? (
+                            <strong style={{ color: '#FF1E40' }}>
+                              * VENDA ATACADO
+                            </strong>
+                          ) : (
+                            <strong>VENDA ATACADO</strong>
+                          )}
                           <Input
                             type="text"
                             id="wholesale_price"
@@ -489,8 +623,12 @@ function NewProduct({ location }) {
                             value={formated_wholesale}
                             onFocus={() => setFormated_wholesale('')}
                             onChange={(e) => {
-                              setFormated_wholesale(e.target.value);
-                              setWholesale_price(e.target.value);
+                              setFormated_wholesale(
+                                e.target.value.toString().replace(',', '.')
+                              );
+                              setWholesale_price(
+                                e.target.value.toString().replace(',', '.')
+                              );
                             }}
                             onBlur={calcWholesale}
                             disabled={!active}
@@ -521,7 +659,13 @@ function NewProduct({ location }) {
 
                   <BlockAmount>
                     <InputBlockAmount>
-                      <strong>MÍNIMO EM ESTOQUE</strong>
+                      {dataError === 7 ? (
+                        <strong style={{ color: '#FF1E40' }}>
+                          * MÍNIMO EM ESTOQUE
+                        </strong>
+                      ) : (
+                        <strong>MÍNIMO EM ESTOQUE</strong>
+                      )}
                       <Input
                         type="text"
                         id="minimum_stock"
@@ -529,11 +673,26 @@ function NewProduct({ location }) {
                         placeholder="Ex: 10"
                         autoCapitalize="off"
                         autoComplete="off"
+                        onChange={() => {
+                          setDataError(0);
+                          const input = document.getElementById(
+                            'minimum_stock'
+                          );
+                          input.style.borderColor = '#ddd';
+                          input.style.background = 'none';
+                        }}
                       />
                     </InputBlockAmount>
 
                     <InputBlockAmount active={!active}>
-                      <strong>QTDE MÍNIMA P/ ATACADO</strong>
+                      {dataError === 8 ? (
+                        <strong style={{ color: '#FF1E40' }}>
+                          * QTDE MÍNIMA P/ ATACADO
+                        </strong>
+                      ) : (
+                        <strong>QTDE MÍNIMA P/ ATACADO</strong>
+                      )}
+
                       <Input
                         type="text"
                         id="minimum_wholesale"
@@ -542,6 +701,14 @@ function NewProduct({ location }) {
                         disabled={!active}
                         autoCapitalize="off"
                         autoComplete="off"
+                        onChange={() => {
+                          setDataError(0);
+                          const input = document.getElementById(
+                            'minimum_wholesale'
+                          );
+                          input.style.borderColor = '#ddd';
+                          input.style.background = 'none';
+                        }}
                       />
                     </InputBlockAmount>
                   </BlockAmount>
@@ -561,7 +728,11 @@ function NewProduct({ location }) {
             </button>
             <div>
               <InputBlock>
-                <strong>NOME</strong>
+                {erro ? (
+                  <strong style={{ color: '#FF1E40' }}>* NOME</strong>
+                ) : (
+                  <strong>NOME</strong>
+                )}
                 <Input
                   type="text"
                   id="name"
@@ -569,7 +740,16 @@ function NewProduct({ location }) {
                   placeholder="Ex: ALIMENTOS"
                   autoCapitalize="off"
                   autoComplete="off"
-                  onFocus
+                  value={name}
+                  onChange={(e) => {
+                    setErro(false);
+
+                    const inputName = document.getElementById('name');
+                    inputName.style.border = '#ddd';
+                    inputName.style.background = '#ddd';
+
+                    setName(e.target.value);
+                  }}
                 />
               </InputBlock>
             </div>
