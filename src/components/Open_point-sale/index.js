@@ -43,7 +43,7 @@ function OpenPointSale() {
     }
 
     loadPdv();
-  }, [company]);
+  }, [company, dispatch]);
 
   const loadCashs = useCallback(async () => {
     const response = await api.get(`/company/${company.id}/cash_registers`);
