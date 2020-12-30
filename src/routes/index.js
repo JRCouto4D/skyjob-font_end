@@ -26,6 +26,8 @@ import Payment from '../pages/Sales/PDV/Payment';
 
 import Operations from '../pages/Operations';
 
+import StockMoviment from '../pages/Catalog/Products/StockMoviment';
+
 export default function Routes() {
   const { dataSale } = useSelector((state) => state.saleData);
 
@@ -50,6 +52,7 @@ export default function Routes() {
       />
       <Route path="/products" exact component={Products} isPrivate />
       <Route path="/products/newItem" exact component={NewProduct} isPrivate />
+      <Route path="/stock/moviment" exact component={StockMoviment} isPrivate />
       <Route path="/providers" exact component={Providers} isPrivate />
       <Route
         path="/providers/newProvider"

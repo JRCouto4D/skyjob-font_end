@@ -27,8 +27,11 @@ export const Modal = styled.div`
 
 export const Content = styled.div`
   width: 80%;
+  max-height: 50vw;
+  overflow: auto;
   background: #fff;
   border-radius: 4px;
+  scrollbar-color: inherit;
 
   header {
     display: flex;
@@ -58,7 +61,7 @@ export const Content = styled.div`
   }
 
   main {
-    padding: 25px;
+    padding: 15px;
 
     form {
       div.box-top {
@@ -76,7 +79,7 @@ export const Content = styled.div`
         border: none;
         width: 100%;
         height: 45px;
-        margin-top: 20px;
+        margin-top: 30px;
         color: #fff;
         font-size: 18px;
         font-weight: bold;
@@ -93,8 +96,8 @@ export const ButtonActive = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60px;
-  height: 30px;
+  width: 40px;
+  height: 20px;
   background: #eee;
   border: none;
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4);
@@ -102,8 +105,8 @@ export const ButtonActive = styled.button`
 
   && div {
     display: flex;
-    width: 54px;
-    height: 24px;
+    width: 34px;
+    height: 14px;
     background: ${(props) => (props.active ? '#ab0000' : '#999')};
     padding: 3px;
     justify-content: ${(props) => (props.active ? 'flex-end' : 'flex-start')};
@@ -111,20 +114,13 @@ export const ButtonActive = styled.button`
 
     div {
       background: #fff;
-      width: 22px;
-      height: 18px;
+      width: 8px;
+      height: 10px;
 
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 3px;
-
-      div {
-        display: block;
-        background: ${(props) => (props.active ? '#ab0000' : '#999')};
-        width: 2px;
-        height: 12px;
-      }
     }
   }
 `;
@@ -236,13 +232,11 @@ export const Box = styled.div`
 `;
 
 export const BoxPrice = styled.div`
-  margin-top: 20px;
+  margin-top: 25px;
 
   > h1 {
-    font-size: 20px;
+    font-size: 18px;
     color: #333;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 5px;
   }
 
   > div {
@@ -257,13 +251,13 @@ export const BlockPrice = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 5px;
   width: 100%;
 `;
 export const CustPrice = styled.div`
   border: 1px solid #ddd;
   width: 280px;
-  height: 150px;
+  height: 130px;
   text-align: right;
   display: flex;
   flex-direction: column;
@@ -297,7 +291,7 @@ export const OthersPrices = styled.div`
   display: flex;
   flex-direction: column;
   align-items: space-between;
-  height: 150px;
+  height: 130px;
   margin-left: 20px;
   width: 100%;
 
@@ -315,7 +309,7 @@ export const InputBlockPrice = styled.div`
   flex-direction: column;
 
   strong {
-    font-size: 18px;
+    font-size: 14px;
     color: #333;
     opacity: ${(props) => (props.active ? 0.3 : 1)};
   }
@@ -347,12 +341,12 @@ export const Profit = styled.div`
   width: 90px;
 
   strong {
-    font-size: 30px;
+    font-size: 25px;
     color: #6fab1f;
   }
 
   span {
-    font-size: 20px;
+    font-size: 15px;
     color: #6fab1f;
     font-weight: bold;
     margin-bottom: 2px;
@@ -368,7 +362,7 @@ export const TextProfit = styled.div`
   opacity: ${(props) => (props.active ? 0.3 : 1)};
 
   strong {
-    font-size: 20px;
+    font-size: 18px;
     color: #666;
     font-weight: bold;
   }
@@ -383,7 +377,7 @@ export const BlockAmount = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 135px;
+  height: 123px;
   width: 200px;
 
   input {
@@ -392,6 +386,37 @@ export const BlockAmount = styled.div`
     :disabled {
       opacity: 0.3;
     }
+  }
+`;
+
+export const StockMoviment = styled.div`
+  margin-top: 10px;
+
+  div.stock-moviment-header {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+
+    > span {
+      margin-top: 5px;
+      display: block;
+      color: #ccc;
+      font-size: 12px;
+    }
+  }
+
+  div.active-moviment {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    > h1 {
+      font-size: 14px;
+      color: #333;
+    }
+  }
+
+  && div.active-moviment {
+    margin-top: 25px;
   }
 `;
 

@@ -45,6 +45,11 @@ export default function sale(state = INITIAL_STATE, action) {
         break;
       }
 
+      case '@sale/ADD_TO_ITEM_FAILURE': {
+        draft.itens.loading = false;
+        break;
+      }
+
       case '@sale/REMOVE_TO_ITEM_REQUEST': {
         draft.itens.loading = true;
         break;

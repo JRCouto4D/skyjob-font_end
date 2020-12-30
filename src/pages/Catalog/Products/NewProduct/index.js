@@ -8,9 +8,12 @@ import { lighten } from 'polished';
 
 import { formatPrice } from '../../../../util/format';
 import { percentage } from '../../../../util/calcPercentage';
+
 import api from '../../../../services/api';
 import history from '../../../../services/history';
+
 import ImageInput from './ImageInput';
+
 import {
   Container,
   Modal,
@@ -31,10 +34,13 @@ import {
   TextProfit,
   InputBlockAmount,
   BlockAmount,
+  StockMoviment,
 } from './styles';
 
 function NewProduct({ location }) {
-  const [active, setActive] = useState(false);
+  const [activeProduct, setActiveProduct] = useState(true);
+  const [activeMoviment, setActiveMoviment] = useState(false);
+  const [activeWholesale, setActiveWholesale] = useState(false);
   const { company } = useSelector((state) => state.user.profile);
 
   const [name, setName] = useState('');
@@ -83,7 +89,6 @@ function NewProduct({ location }) {
   }
 
   async function handleSubmit(data) {
-    console.tron.log(data);
     if (data.description === '') {
       setDataError(1);
       const input = document.getElementById('description');
@@ -125,7 +130,7 @@ function NewProduct({ location }) {
     }
 
     if (
-      (active && wholesale_price === 0) ||
+      (activeWholesale && wholesale_price === 0) ||
       wholesale_price === null ||
       wholesale_price === ''
     ) {
@@ -154,7 +159,7 @@ function NewProduct({ location }) {
     }
 
     if (
-      (active && data.minimum_wholesale === '') ||
+      (activeWholesale && data.minimum_wholesale === '') ||
       data.minimum_wholesale === null ||
       data.minimum_wholesale === 0
     ) {
@@ -168,12 +173,12 @@ function NewProduct({ location }) {
       return;
     }
 
-    const dataCompleted = active
+    const dataCompleted = activeWholesale
       ? {
           category_id: selectedCategory.id,
           provider_id: selectedProvider.id,
           unit_id: selectedUnit.id,
-          wholesale: active,
+          wholesale: activeWholesale,
           cust_price,
           description: data.description,
           retail_price,
@@ -181,17 +186,21 @@ function NewProduct({ location }) {
           minimum_stock: data.minimum_stock,
           minimum_wholesale: data.minimum_wholesale,
           image_id: data.image_id,
+          stock_moviment: activeMoviment,
+          active: activeProduct,
         }
       : {
           category_id: selectedCategory.id,
           provider_id: selectedProvider.id,
           unit_id: selectedUnit.id,
-          wholesale: active,
+          wholesale: activeWholesale,
           cust_price,
           description: data.description,
           retail_price,
           minimum_stock: data.minimum_stock,
           image_id: data.image_id,
+          stock_moviment: activeMoviment,
+          active: activeProduct,
         };
 
     if (location.state) {
@@ -253,12 +262,14 @@ function NewProduct({ location }) {
     loadUnits();
     if (location.state) {
       const { item } = location.state;
-      console.tron.log(item);
+
       setSelectedProvider(item.provider);
       setSelectedCategory(item.category);
       setSelectedUnit(item.unit);
       setCust_price(Number(item.cust_price));
-      setActive(item.wholesale);
+      setActiveWholesale(item.wholesale);
+      setActiveProduct(item.active);
+      setActiveMoviment(item.stock_moviment);
       setRetail_price(Number(item.retail_price));
       setWholesale_price(Number(item.wholesale_price));
 
@@ -387,12 +398,13 @@ function NewProduct({ location }) {
         <Content>
           <header>
             <h1>NOVO ITEM</h1>
+
             <div>
-              <strong>VENDAS EM ATACADO</strong>
+              <strong>PRODUTO ATIVO</strong>
               <ButtonActive
-                active={active}
+                active={activeProduct}
                 type="button"
-                onClick={() => setActive(!active)}
+                onClick={() => setActiveProduct(!activeProduct)}
               >
                 <div>
                   <div>
@@ -540,8 +552,68 @@ function NewProduct({ location }) {
                 </BoxDescription>
               </div>
 
+              <StockMoviment>
+                <div className="stock-moviment-header">
+                  <div className="active-moviment">
+                    <h1>MOVIMENTAÇÃO NO ESTOQUE</h1>
+                    <ButtonActive
+                      active={activeMoviment}
+                      type="button"
+                      onClick={() => setActiveMoviment(!activeMoviment)}
+                    >
+                      <div>
+                        <div>
+                          <div />
+                        </div>
+                      </div>
+                    </ButtonActive>
+                  </div>
+                  <span>
+                    Ao ativar este recurso, o sistema movimentará o estoque
+                    deste produto, automaticamente, sempre que uma compra ou
+                    venda for realizada.
+                  </span>
+                </div>
+              </StockMoviment>
+
+              <StockMoviment>
+                <div className="stock-moviment-header">
+                  <div className="active-moviment">
+                    <h1>VENDAS EM ATACADO</h1>
+                    <ButtonActive
+                      active={activeWholesale}
+                      type="button"
+                      onClick={() => {
+                        setActiveWholesale(!activeWholesale);
+
+                        if (retail_price === 0) {
+                          const input = document.getElementById('retail_price');
+                          input.focus();
+                        } else if (activeWholesale) {
+                          const input = document.getElementById(
+                            'wholesale_price'
+                          );
+
+                          input.focus();
+                        }
+                      }}
+                    >
+                      <div>
+                        <div>
+                          <div />
+                        </div>
+                      </div>
+                    </ButtonActive>
+                  </div>
+                  <span>
+                    Ao ativar este recurso, o produto em questão será incluso na
+                    categoria de produtos aptos para vedas em atacado.
+                  </span>
+                </div>
+              </StockMoviment>
+
               <BoxPrice>
-                <h1>PREÇOS</h1>
+                <h1>PREÇOS:</h1>
                 <div>
                   <BlockPrice>
                     <CustPrice>
@@ -583,7 +655,16 @@ function NewProduct({ location }) {
                               input.style.borderColor = '#ddd';
                               input.style.background = 'none';
                             }}
-                            onBlur={calcRetail}
+                            onBlur={(e) => {
+                              if (e.target.value !== '') {
+                                calcRetail();
+                              }
+
+                              const input = document.getElementById(
+                                'minimum_stock'
+                              );
+                              input.focus();
+                            }}
                             autoCapitalize="off"
                             autoComplete="off"
                           />
@@ -607,7 +688,7 @@ function NewProduct({ location }) {
                       </div>
 
                       <div>
-                        <InputBlockPrice active={!active}>
+                        <InputBlockPrice active={!activeWholesale}>
                           {dataError === 6 ? (
                             <strong style={{ color: '#FF1E40' }}>
                               * VENDA ATACADO
@@ -629,9 +710,24 @@ function NewProduct({ location }) {
                               setWholesale_price(
                                 e.target.value.toString().replace(',', '.')
                               );
+                              setDataError(0);
+                              const input = document.getElementById(
+                                'wholesale_price'
+                              );
+                              input.style.borderColor = '#ddd';
+                              input.style.background = 'none';
                             }}
-                            onBlur={calcWholesale}
-                            disabled={!active}
+                            onBlur={(e) => {
+                              if (e.target.value !== '') {
+                                calcWholesale();
+                              }
+
+                              const input = document.getElementById(
+                                'minimum_wholesale'
+                              );
+                              input.focus();
+                            }}
+                            disabled={!activeWholesale}
                             autoCapitalize="off"
                             autoComplete="off"
                           />
@@ -639,7 +735,7 @@ function NewProduct({ location }) {
 
                         <Profit>
                           {location.state &&
-                          active &&
+                          activeWholesale &&
                           Number(location.state.item.cust_price) !== 0 ? (
                             <>
                               <strong>{Number(percentWholesale)}</strong>
@@ -649,7 +745,7 @@ function NewProduct({ location }) {
                             <strong>N/D</strong>
                           )}
                         </Profit>
-                        <TextProfit active={!active}>
+                        <TextProfit active={!activeWholesale}>
                           <strong>MARGEM DE LUCRO</strong>
                           <span>(APROXIMADA NO ATACADO)</span>
                         </TextProfit>
@@ -681,10 +777,18 @@ function NewProduct({ location }) {
                           input.style.borderColor = '#ddd';
                           input.style.background = 'none';
                         }}
+                        onBlur={() => {
+                          if (activeWholesale) {
+                            const input = document.getElementById(
+                              'wholesale_price'
+                            );
+                            input.focus();
+                          }
+                        }}
                       />
                     </InputBlockAmount>
 
-                    <InputBlockAmount active={!active}>
+                    <InputBlockAmount active={!activeWholesale}>
                       {dataError === 8 ? (
                         <strong style={{ color: '#FF1E40' }}>
                           * QTDE MÍNIMA P/ ATACADO
@@ -698,7 +802,7 @@ function NewProduct({ location }) {
                         id="minimum_wholesale"
                         name="minimum_wholesale"
                         placeholder="Ex: 6"
-                        disabled={!active}
+                        disabled={!activeWholesale}
                         autoCapitalize="off"
                         autoComplete="off"
                         onChange={() => {

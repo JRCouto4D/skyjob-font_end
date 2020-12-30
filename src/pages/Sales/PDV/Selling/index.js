@@ -191,12 +191,14 @@ function Selling() {
       return;
     }
 
-    if (
-      selectedProduct.amount_stock <= 0 ||
-      amount > selectedProduct.amount_stock
-    ) {
-      toast.error('Produto em baixa no estoque');
-      return;
+    if (selectedProduct.stock_moviment) {
+      if (
+        selectedProduct.amount_stock <= 0 ||
+        amount > selectedProduct.amount_stock
+      ) {
+        toast.error('Produto em baixa no estoque');
+        return;
+      }
     }
 
     const dataItem = {
