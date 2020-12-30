@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { MdClear, MdSwapHoriz } from 'react-icons/md';
 import { Input } from '@rocketseat/unform';
@@ -40,7 +40,7 @@ function StockMoviment({ location }) {
     }, 201);
   }
 
-  function handleOk() {
+  const handleOk = useCallback(() => {
     async function movimentStock() {
       try {
         await api.put(`/moviment_stock/product/${product.id}`, {
@@ -98,7 +98,7 @@ function StockMoviment({ location }) {
     setTimeout(() => {
       movimentStock();
     }, 201);
-  }
+  }, [amount, product, selectedMoviment]);
 
   const renderContainer = useMemo(
     () => (
@@ -202,7 +202,7 @@ function StockMoviment({ location }) {
         </Content>
       </Container>
     ),
-    [animation, selectedMoviment, amount, error]
+    [animation, selectedMoviment, amount, error, handleOk, moviments, product]
   );
 
   return (
