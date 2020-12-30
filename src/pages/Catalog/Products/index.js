@@ -7,9 +7,10 @@ import {
   MdSearch,
   MdFilterList,
   MdDeleteForever,
-  MdCreate,
+  MdEdit,
   MdFastRewind,
   MdFastForward,
+  MdSwapHoriz,
 } from 'react-icons/md';
 import { FaSpinner } from 'react-icons/fa';
 import { Input } from '@rocketseat/unform';
@@ -17,8 +18,11 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import { formatPrice } from '../../../util/format';
+
 import api from '../../../services/api';
 import history from '../../../services/history';
+
+import ActionsPopUp from '../../../components/ActionsPopUp';
 
 import {
   Container,
@@ -163,22 +167,47 @@ function Products() {
 
               <strong>{product.active ? 'SIM' : 'NÃO'}</strong>
 
-              <div className="boxActions">
-                <button
-                  type="button"
-                  onClick={() => {
-                    history.push('/products/newItem', {
-                      item: product,
-                    });
-                  }}
-                >
-                  <MdCreate color="#333" size={20} />
-                </button>
+              <ActionsPopUp>
+                <div className="boxActions">
+                  {product.stock_moviment && (
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          history.push('stock/moviment', { product })
+                        }
+                      >
+                        <MdSwapHoriz color="#AB0000" size={20} />
+                        <span>Estoque</span>
+                      </button>
+                    </div>
+                  )}
 
-                <button type="button" onClick={() => deleteProduct(product.id)}>
-                  <MdDeleteForever color="#ab0000" size={20} />
-                </button>
-              </div>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        history.push('/products/newItem', {
+                          item: product,
+                        });
+                      }}
+                    >
+                      <MdEdit color="#4D85EE" size={16} />
+                      <span>Editar</span>
+                    </button>
+                  </div>
+
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => deleteProduct(product.id)}
+                    >
+                      <MdDeleteForever color="#DE3B3B" size={16} />
+                      <span>Excluir</span>
+                    </button>
+                  </div>
+                </div>
+              </ActionsPopUp>
             </LineTable>
           );
         })}

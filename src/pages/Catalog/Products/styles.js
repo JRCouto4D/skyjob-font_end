@@ -12,6 +12,7 @@ export const Container = styled.div`
 
 export const Content = styled.div`
   width: 80%;
+  min-width: 1000px;
   height: 510px;
   background: #fff;
   border-radius: 4px;
@@ -127,7 +128,7 @@ export const TableProducts = styled.ul`
     margin-top: 3px;
     display: grid;
     grid-template-columns: 310px 130px 1fr 1fr 105px 90px 90px 60px;
-    padding: 0 10px;
+    padding-left: 10px;
 
     strong {
       color: #333;
@@ -142,30 +143,15 @@ export const LineTable = styled.li`
   grid-template-columns: 310px 130px 1fr 1fr 105px 90px 90px 60px;
   background: #eee;
   width: 100%;
-  padding: 12px 10px;
+  padding-left: 11px;
   align-items: center;
   border-radius: 4px;
+  height: 45px;
 
   strong {
     color: #666;
     font-weight: normal;
     font-size: 12px;
-  }
-
-  div.boxActions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 50px;
-
-    button {
-      background: none;
-      border: none;
-
-      :hover {
-        opacity: 0.7;
-      }
-    }
   }
 `;
 
