@@ -2,7 +2,7 @@ import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 import api from '../../../services/api';
 
-import { signFailure, signInSuccess } from './actions';
+import { signFailure, signInSuccess, signInCompanySuccess } from './actions';
 
 import history from '../../../services/history';
 
@@ -29,7 +29,7 @@ export function* signIn({ payload }) {
     history.push('/main');
   } catch (err) {
     toast.error(
-      `Erro ao tentar acessar o sistema. Por favor verifique seus dados. ERRO: ${err}`
+      'Erro ao tentar acessar o sistema. Por favor verifique seus dados.'
     );
     yield put(signFailure());
   }
@@ -49,8 +49,33 @@ export function signOut() {
   history.push('/');
 }
 
+export function* signInCompany({ payload }) {
+  try {
+    const { email, password } = payload;
+
+    const response = yield call(api.post, '/session/admin', {
+      email,
+      password,
+    });
+
+    const { user, token } = response.data;
+
+    api.defaults.headers.Authorization = `Bearer ${token}`;
+
+    yield put(signInCompanySuccess(user, token));
+
+    history.push('/main');
+  } catch (err) {
+    toast.error(
+      'Erro ao tentar acessar o sistema. Por favor verifique seus dados.'
+    );
+    yield put(signFailure());
+  }
+}
+
 export default all([
   takeLatest('persist/REHYDRATE', setToken),
   takeLatest('@auth/SIGN_IN_REQUEST', signIn),
   takeLatest('@auth/SIGN_OUT', signOut),
+  takeLatest('@auth/SIGN_IN_COMPANY_REQUEST', signInCompany),
 ]);

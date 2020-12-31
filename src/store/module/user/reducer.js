@@ -11,6 +11,11 @@ export default function user(state = INITIAL_STATE, action) {
         draft.profile = action.payload.user;
         break;
       }
+
+      case '@auth/SIGN_IN_COMPANY_SUCCESS': {
+        draft.profile = action.payload.user;
+        break;
+      }
       default:
     }
   });

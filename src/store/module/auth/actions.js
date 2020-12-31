@@ -23,3 +23,17 @@ export function signOut() {
     type: '@auth/SIGN_OUT',
   };
 }
+
+export function signInCompanyRequest(email, password) {
+  return {
+    type: '@auth/SIGN_IN_COMPANY_REQUEST',
+    payload: { email, password },
+  };
+}
+
+export function signInCompanySuccess(user, token) {
+  return {
+    type: '@auth/SIGN_IN_COMPANY_SUCCESS',
+    payload: { user, token },
+  };
+}
