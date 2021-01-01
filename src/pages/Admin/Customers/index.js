@@ -13,6 +13,8 @@ import { Input } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
 import { parseISO, format, formatDistanceStrict } from 'date-fns';
 import pt from 'date-fns/locale/pt';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import ActionsPopUp from '../../../components/ActionsPopUp';
 
@@ -65,6 +67,37 @@ function Customers() {
     }
     loadData();
   }, [page, search]);
+
+  const deleteCompanies = useCallback(
+    (company_id) => {
+      async function deleted(id) {
+        confirmAlert({
+          title: 'REMOVER CLIENTE',
+          message: 'Deseja realmente remover este cliente?',
+          buttons: [
+            {
+              label: 'Sim',
+              onClick: async () => {
+                try {
+                  await api.delete(`/skyjob/companies/${id}`);
+                  toast.success('O cliente foi deletado com sucesso!');
+                  loadCustomers();
+                } catch (err) {
+                  toast.error('Algo deu errado, por favor tente mais tarde');
+                }
+              },
+            },
+            {
+              label: 'Não',
+              onClick: () => {},
+            },
+          ],
+        });
+      }
+      deleted(company_id);
+    },
+    [loadCustomers]
+  );
 
   useEffect(() => {
     loadCustomers();
@@ -125,7 +158,7 @@ function Customers() {
             <div>
               <button
                 type="button"
-                onClick={() => deleteDeliveryman(deliverymen.id)}
+                onClick={() => deleteCompanies(customer.id)}
               >
                 <MdDeleteForever color="#DE3B3B" size={16} />
                 <span>Excluir</span>
