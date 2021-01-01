@@ -53,7 +53,6 @@ function Customers() {
 
         const { companies, total: ttal } = response.data;
 
-        console.tron.log(companies);
         setCustomers(companies);
         setTotal(ttal);
         setPrePage(Math.ceil(ttal / 12));
@@ -148,7 +147,7 @@ function Customers() {
               <button
                 type="button"
                 onClick={() =>
-                  history.push('/deliveryman/form', { deliverymen })
+                  history.push('/admin/customers/form', { customer })
                 }
               >
                 <MdEdit color="#4D85EE" size={16} />
@@ -167,7 +166,7 @@ function Customers() {
           </ActionsPopUp>
         </li>
       )),
-    [customers]
+    [customers, deleteCompanies]
   );
 
   function nextPage() {
