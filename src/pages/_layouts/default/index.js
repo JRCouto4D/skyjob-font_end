@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Header from '../../../components/Header';
+import RenderHeader from '../../../components/RenderHeader';
 import Footer from '../../../components/Footer';
 import { Wrapper, Content } from './styles';
 
 function deafultLayout({ children }) {
   return (
     <Wrapper>
-      <Header />
+      <RenderHeader />
       <Footer />
       <Content>{children}</Content>
     </Wrapper>

@@ -58,6 +58,9 @@ function SignIn() {
                 onClick={() => {
                   setSignInCompany(true);
                   setSignInAdmin(false);
+
+                  const input = document.getElementById('email');
+                  input.focus();
                 }}
               >
                 <strong>EMPRESA</strong>
@@ -78,6 +81,9 @@ function SignIn() {
                 onClick={() => {
                   setSignInCompany(false);
                   setSignInAdmin(true);
+
+                  const input = document.getElementById('email');
+                  input.focus();
                 }}
               >
                 <strong>ADMIN</strong>
