@@ -52,28 +52,75 @@ export const Content = styled.div`
         : props.poup === 2 && animationContainer1}
     0.3s forwards;
 
-  nav {
+  div.box-topo {
     width: 100%;
-
-    button {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
-      width: 100%;
+    margin-top: -30px;
+    div.box-user {
       display: flex;
+      flex-direction: row;
       align-items: center;
-      justify-content: flex-start;
-      height: 45px;
-      padding-left: 20px;
-      transition: 0.2s;
+      justify-content: center;
+      width: 100%;
+      margin-left: -10px;
 
-      strong {
-        color: #f0f0f0;
-        margin-left: 10px;
-        margin-top: 2px;
+      div.box-info {
+        display: flex;
+        flex-direction: column;
+
+        span {
+          color: #f0f0f0;
+          font-size: 11px;
+          margin-left: 15px;
+          margin-top: 3px;
+        }
+
+        strong {
+          font-size: 12px;
+          color: #f0f0f0;
+          margin-left: 15px;
+        }
       }
 
-      :hover {
-        background: rgba(255, 255, 255, 0.06);
+      div.box-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        border: 3px solid #40e0d0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          width: 70px;
+          height: 70px;
+          border-radius: 35px;
+        }
+      }
+    }
+    nav {
+      width: 100%;
+      margin-top: 20px;
+
+      button {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        height: 45px;
+        padding-left: 20px;
+        transition: 0.2s;
+
+        strong {
+          color: #f0f0f0;
+          margin-left: 10px;
+          margin-top: 2px;
+        }
+
+        :hover {
+          background: rgba(255, 255, 255, 0.06);
+        }
       }
     }
   }

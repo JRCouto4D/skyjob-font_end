@@ -25,7 +25,7 @@ function HeaderAdmin() {
       setAnimation(2);
       console.tron.log(animation);
     }
-  }, [viewMenu]);
+  }, [viewMenu, animation]);
 
   const renderMenu = useMemo(
     () => (
