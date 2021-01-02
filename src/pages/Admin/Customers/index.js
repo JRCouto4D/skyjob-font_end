@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-undef */
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   MdPrint,
   MdAdd,
@@ -10,10 +10,16 @@ import {
 } from 'react-icons/md';
 import { FaSpinner } from 'react-icons/fa';
 import { Input } from '@rocketseat/unform';
+import { toast } from 'react-toastify';
+import { parseISO, format, formatDistanceStrict } from 'date-fns';
+import pt from 'date-fns/locale/pt';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import ActionsPopUp from '../../../components/ActionsPopUp';
 
 import history from '../../../services/history';
+import api from '../../../services/api';
 
 import {
   Container,
@@ -22,13 +28,79 @@ import {
   NewSearch,
   TableCustomer,
   Loading,
+  Pagination,
 } from './styles';
 
 function Customers() {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [prePage, setPrePage] = useState(0);
+  const [total, setTotal] = useState(0);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
   const [customers, setCustomers] = useState([]);
+
+  const loadCustomers = useCallback(() => {
+    async function loadData() {
+      try {
+        setLoading(true);
+
+        const response = await api.get('skyjob/companies/list', {
+          params: {
+            page,
+            search,
+          },
+        });
+
+        const { companies, total: ttal } = response.data;
+
+        setCustomers(companies);
+        setTotal(ttal);
+        setPrePage(Math.ceil(ttal / 12));
+        setLoading(false);
+      } catch (err) {
+        toast.error(
+          'Algo deu errado e não foi possivel carregar a lista de clientes.'
+        );
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, [page, search]);
+
+  const deleteCompanies = useCallback(
+    (company_id) => {
+      async function deleted(id) {
+        confirmAlert({
+          title: 'REMOVER CLIENTE',
+          message: 'Deseja realmente remover este cliente?',
+          buttons: [
+            {
+              label: 'Sim',
+              onClick: async () => {
+                try {
+                  await api.delete(`/skyjob/companies/${id}`);
+                  toast.success('O cliente foi deletado com sucesso!');
+                  loadCustomers();
+                } catch (err) {
+                  toast.error('Algo deu errado, por favor tente mais tarde');
+                }
+              },
+            },
+            {
+              label: 'Não',
+              onClick: () => {},
+            },
+          ],
+        });
+      }
+      deleted(company_id);
+    },
+    [loadCustomers]
+  );
+
+  useEffect(() => {
+    loadCustomers();
+  }, [loadCustomers]);
 
   const memoList = useMemo(
     () =>
@@ -37,27 +109,45 @@ function Customers() {
           <span>{`#${customer.id}`}</span>
           <div className="box-description">
             <img
-              alt={customer.name}
+              alt={customer.description}
               src={
                 customer.avatar
                   ? customer.avatar.url
-                  : `https://ui-avatars.com/api/?color=40e0d0&background=ddd&bold=true&format=svg&size=34&rounded=true&name=${customer.name}`
+                  : `https://ui-avatars.com/api/?color=40e0d0&background=ddd&bold=true&format=svg&size=34&rounded=true&name=${customer.description}`
               }
               style={{ width: 34, height: 34, borderRadius: 17 }}
             />
-            <strong>{customer.name}</strong>
+            <strong>{customer.description ? customer.description : ''}</strong>
           </div>
-          <span>{customer.email}</span>
+          <span>{customer.email ? customer.email : ''}</span>
           <span>{customer.access ? 'OK' : 'RESTRITO'}</span>
-          <span>{customer.start_date}</span>
-          <span>{customer.end_date}</span>
+          <span>
+            {customer.contract
+              ? format(
+                  parseISO(customer.contract.start_date),
+                  "dd/MM/yy 'às' HH:mm 'h'"
+                )
+              : ''}
+          </span>
+          <span>
+            {customer.contract
+              ? formatDistanceStrict(
+                  parseISO(customer.contract.end_date),
+                  new Date(),
+                  {
+                    addSuffix: true,
+                    locale: pt,
+                  }
+                )
+              : ''}
+          </span>
 
           <ActionsPopUp>
             <div>
               <button
                 type="button"
                 onClick={() =>
-                  history.push('/deliveryman/form', { deliverymen })
+                  history.push('/admin/customers/form', { customer })
                 }
               >
                 <MdEdit color="#4D85EE" size={16} />
@@ -67,7 +157,7 @@ function Customers() {
             <div>
               <button
                 type="button"
-                onClick={() => deleteDeliveryman(deliverymen.id)}
+                onClick={() => deleteCompanies(customer.id)}
               >
                 <MdDeleteForever color="#DE3B3B" size={16} />
                 <span>Excluir</span>
@@ -76,8 +166,21 @@ function Customers() {
           </ActionsPopUp>
         </li>
       )),
-    [customers]
+    [customers, deleteCompanies]
   );
+
+  function nextPage() {
+    setPrePage(Math.ceil(total / 12));
+    setPage(page < prePage ? page + 1 : page);
+
+    loadCustomers();
+  }
+
+  function prevPage() {
+    setPage(page >= 2 ? page - 1 : page);
+
+    loadCustomers();
+  }
 
   return (
     <Container>
@@ -95,7 +198,10 @@ function Customers() {
         </Header>
 
         <NewSearch>
-          <button type="button" onClick={() => {}}>
+          <button
+            type="button"
+            onClick={() => history.push('/admin/customers/form')}
+          >
             <MdAdd color="#fff" size={20} />
             <strong>NOVO REGISTRO</strong>
           </button>
@@ -154,6 +260,20 @@ function Customers() {
             memoList
           )}
         </TableCustomer>
+
+        <Pagination>
+          <span>{`Mostando ${customers.length} registros de um total de ${total}`}</span>
+
+          <div className="box-pagination">
+            <button type="button" onClick={prevPage} disabled={page === 1}>
+              Anterior
+            </button>
+            <span>{`página ${page} de ${prePage}`}</span>
+            <button type="button" onClick={nextPage} disabled={page >= prePage}>
+              Próximo
+            </button>
+          </div>
+        </Pagination>
       </Content>
     </Container>
   );

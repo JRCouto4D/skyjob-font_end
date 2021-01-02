@@ -28,6 +28,10 @@ import Operations from '../pages/Operations';
 
 import StockMoviment from '../pages/Catalog/Products/StockMoviment';
 
+import AdminCustomers from '../pages/Admin/Customers';
+import NewCompanies from '../pages/Admin/Customers/NewCompanies';
+import Contracts from '../pages/Admin/Contracts';
+
 export default function Routes() {
   const { dataSale } = useSelector((state) => state.saleData);
 
@@ -74,6 +78,20 @@ export default function Routes() {
       <Route path="/returns/list" exact component={ListReturns} isPrivate />
 
       <Route path="/operations" exact component={Operations} isPrivate />
+
+      <Route
+        path="/admin/customers"
+        exact
+        component={AdminCustomers}
+        isPrivate
+      />
+      <Route
+        path="/admin/customers/form"
+        exact
+        component={NewCompanies}
+        isPrivate
+      />
+      <Route path="/contracts" exact component={Contracts} isPrivate />
     </Switch>
   );
 }

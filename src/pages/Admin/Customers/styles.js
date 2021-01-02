@@ -5,7 +5,7 @@ export const Container = styled.div`
   background: #eee;
   width: 100%;
   height: 100%;
-  padding: 50px 25px 25px;
+  padding: 50px 25px 0px;
   overflow: auto;
 `;
 
@@ -15,6 +15,9 @@ export const Content = styled.div`
   padding: 20px;
   margin-top: 20px;
   min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 export const Header = styled.div`
@@ -45,6 +48,11 @@ export const Header = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: 0.2s;
+
+    :hover {
+      opacity: 0.7;
+    }
 
     strong {
       font-size: 12px;
@@ -173,5 +181,53 @@ export const Loading = styled.div`
 
   svg {
     animation: ${rotate} 1s linear infinite;
+  }
+`;
+
+export const Pagination = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 15px;
+
+  > span {
+    color: #ccc;
+    font-size: 12px;
+  }
+
+  div.box-pagination {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 10px;
+    align-items: center;
+
+    span {
+      color: #999;
+    }
+
+    button {
+      background: none;
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #999;
+      transition: 0.2s;
+
+      :hover {
+        text-decoration: underline;
+      }
+
+      :disabled {
+        opacity: 0.6;
+        cursor: default;
+
+        :hover {
+          text-decoration: none;
+        }
+      }
+    }
   }
 `;
