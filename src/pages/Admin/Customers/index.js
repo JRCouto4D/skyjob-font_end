@@ -117,9 +117,21 @@ function Customers() {
               }
               style={{ width: 34, height: 34, borderRadius: 17 }}
             />
-            <strong>{customer.description ? customer.description : ''}</strong>
+            <strong>
+              {customer.description
+                ? customer.description.length > 35
+                  ? `${customer.description.substr(0, 35)}...`
+                  : customer.description
+                : ''}
+            </strong>
           </div>
-          <span>{customer.email ? customer.email : ''}</span>
+          <span>
+            {customer.email
+              ? customer.email.length > 25
+                ? `${customer.email.substr(0, 25)}...`
+                : customer.email
+              : ''}
+          </span>
           <span>{customer.access ? 'OK' : 'RESTRITO'}</span>
           <span>
             {customer.contract
@@ -262,7 +274,9 @@ function Customers() {
         </TableCustomer>
 
         <Pagination>
-          <span>{`Mostando ${customers.length} registros de um total de ${total}`}</span>
+          <span>{`Mostando ${customers.length} ${
+            customers.length > 1 ? 'registros' : 'registro'
+          } de um total de ${total}`}</span>
 
           <div className="box-pagination">
             <button type="button" onClick={prevPage} disabled={page === 1}>
