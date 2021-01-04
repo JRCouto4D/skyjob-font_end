@@ -31,6 +31,7 @@ import StockMoviment from '../pages/Catalog/Products/StockMoviment';
 import AdminCustomers from '../pages/Admin/Customers';
 import NewCompanies from '../pages/Admin/Customers/NewCompanies';
 import Contracts from '../pages/Admin/Contracts';
+import ContractForm from '../pages/Admin/Contracts/ContractForm';
 
 export default function Routes() {
   const { dataSale } = useSelector((state) => state.saleData);
@@ -92,6 +93,8 @@ export default function Routes() {
         isPrivate
       />
       <Route path="/contracts" exact component={Contracts} isPrivate />
+
+      <Route path="/contracts/form" exact component={ContractForm} isPrivate />
     </Switch>
   );
 }
