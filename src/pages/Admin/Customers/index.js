@@ -57,7 +57,7 @@ function Customers() {
 
         setCustomers(companies);
         setTotal(ttal);
-        setPrePage(Math.ceil(ttal / 12));
+        setPrePage(Math.ceil(ttal / 5));
         setLoading(false);
       } catch (err) {
         toast.error(
@@ -235,7 +235,7 @@ function Customers() {
   );
 
   function nextPage() {
-    setPrePage(Math.ceil(total / 12));
+    setPrePage(Math.ceil(total / 5));
     setPage(page < prePage ? page + 1 : page);
 
     loadCustomers();
