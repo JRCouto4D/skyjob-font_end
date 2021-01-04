@@ -5,17 +5,18 @@ export const Container = styled.div`
   background: #eee;
   width: 100%;
   min-width: 1100px;
-  height: 100%;
-  padding: 50px 25px 0px;
-  overflow: auto;
+  padding: 70px 25px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const Content = styled.div`
   background: #fff;
   min-width: 1000px;
+  width: 100%;
   border-radius: 4px;
   padding: 20px;
-  margin-top: 20px;
   min-height: 85vh;
   display: flex;
   flex-direction: column;
@@ -126,7 +127,7 @@ export const NewSearch = styled.div`
 
 export const TableCustomer = styled.ul`
   width: 100%;
-  height: 300px;
+  height: 320px;
   margin-top: 25px;
 
   li.table-header {
@@ -186,7 +187,7 @@ export const Loading = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
+  height: 300px;
 
   svg {
     animation: ${rotate} 1s linear infinite;
@@ -199,7 +200,7 @@ export const Pagination = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-top: 15px;
+  margin-top: 25px;
 
   > span {
     color: #ccc;

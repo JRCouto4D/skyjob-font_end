@@ -1,5 +1,6 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
+import { parseISO, isPast, addDays } from 'date-fns';
 import api from '../../../services/api';
 
 import { signFailure, signInSuccess, signInCompanySuccess } from './actions';
@@ -17,9 +18,19 @@ export function* signIn({ payload }) {
 
     const { user, token } = response.data;
 
-    if (!user.company.access) {
-      toast.error('Acesso restrito. Entra em contato com a equipe SkuJob.');
-      yield put(signFailure());
+    if (user.company) {
+      const { contract } = user.company;
+
+      const checkEndContract = isPast(addDays(parseISO(contract.end_date), 1));
+      console.tron.log(checkEndContract);
+
+      if (checkEndContract) {
+        toast.error(
+          'Entre em contato com a equipe SkyJob: skyjob@email.com ou (77) 98120-0675.'
+        );
+        yield put(signFailure());
+        return;
+      }
     }
 
     api.defaults.headers.Authorization = `Bearer ${token}`;
