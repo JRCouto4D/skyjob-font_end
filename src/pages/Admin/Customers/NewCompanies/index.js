@@ -6,6 +6,8 @@ import { FaSpinner } from 'react-icons/fa';
 import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import InputImg from './ImageInput';
 
@@ -39,9 +41,9 @@ const schema2 = Yup.object().shape({
 });
 
 function NewCompanies({ location }) {
-  if (location.state) console.tron.log(location.state.customer);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingCancelContract, setLoadingCancelContract] = useState(false);
 
   function handleCancel() {
     const input = document.getElementById('description');
@@ -113,6 +115,44 @@ function NewCompanies({ location }) {
         handleCancel();
       }
     }
+  }
+
+  async function cancelToContract() {
+    confirmAlert({
+      title: 'CANCELAR CONTRATO',
+      message: 'Deseja realmente cancelar este contrato?',
+      buttons: [
+        {
+          label: 'Sim',
+          onClick: async () => {
+            try {
+              if (location.state) {
+                const { contract } = location.state.customer;
+                setLoadingCancelContract(true);
+
+                if (contract.status) {
+                  await api.put(`/skyjob/contracts/${contract.id}/cancel`);
+
+                  toast.success('O contrato foi cancelado com sucesso.');
+                }
+
+                setLoadingCancelContract(false);
+                history.goBack();
+              }
+            } catch (err) {
+              toast.error(
+                'Algo deu errado e não foi possível cancelar o contrato'
+              );
+              setLoadingCancelContract(false);
+            }
+          },
+        },
+        {
+          label: 'Não',
+          onClick: () => {},
+        },
+      ],
+    });
   }
 
   return (
@@ -213,23 +253,63 @@ function NewCompanies({ location }) {
           </div>
 
           <div className="box-buttons">
-            <button
-              type="button"
-              className="cancel-button"
-              onClick={handleCancel}
-            >
-              CANCELAR
-            </button>
+            <div className="box-buttons-left">
+              <button
+                type="button"
+                className="cancel-button"
+                onClick={handleCancel}
+              >
+                CANCELAR
+              </button>
 
-            <button type="submit" className="submit-button">
-              {loading ? (
-                <Loading>
-                  <FaSpinner color="#fff" size={18} />
-                </Loading>
-              ) : (
-                <strong>SALVAR</strong>
-              )}
-            </button>
+              <button type="submit" className="submit-button">
+                {loading ? (
+                  <Loading>
+                    <FaSpinner color="#fff" size={18} />
+                  </Loading>
+                ) : (
+                  <strong>SALVAR</strong>
+                )}
+              </button>
+            </div>
+
+            {location.state &&
+            location.state.customer.contract &&
+            location.state.customer.contract.status ? (
+              <button
+                type="button"
+                className="cancel-contract-button"
+                onClick={cancelToContract}
+              >
+                {loadingCancelContract ? (
+                  <Loading>
+                    <FaSpinner color="#fff" size={18} />
+                  </Loading>
+                ) : (
+                  <strong>CANCELAR CONTRATO</strong>
+                )}
+              </button>
+            ) : (
+              location.state && (
+                <button
+                  type="button"
+                  className="new-contract-button"
+                  onClick={() =>
+                    history.push('/contracts', {
+                      customer: location.state.customer,
+                    })
+                  }
+                >
+                  {loadingCancelContract ? (
+                    <Loading>
+                      <FaSpinner color="#fff" size={18} />
+                    </Loading>
+                  ) : (
+                    <strong>NOVO CONTRATO</strong>
+                  )}
+                </button>
+              )
+            )}
           </div>
         </Form>
       </Content>

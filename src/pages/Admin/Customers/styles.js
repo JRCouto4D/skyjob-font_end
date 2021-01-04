@@ -4,6 +4,7 @@ import { darken } from 'polished';
 export const Container = styled.div`
   background: #eee;
   width: 100%;
+  min-width: 1100px;
   height: 100%;
   padding: 50px 25px 0px;
   overflow: auto;
@@ -11,6 +12,7 @@ export const Container = styled.div`
 
 export const Content = styled.div`
   background: #fff;
+  min-width: 1000px;
   border-radius: 4px;
   padding: 20px;
   margin-top: 20px;
@@ -131,7 +133,7 @@ export const TableCustomer = styled.ul`
     display: grid;
     align-items: center;
     justify-content: flex-start;
-    grid-template-columns: 1fr 3fr 2fr 1fr 2fr 2fr 60px;
+    grid-template-columns: 80px 3fr 2fr 1fr 1fr 2fr 2fr 60px;
     grid-column-gap: 10px;
     background: transparent;
     height: 35px;
@@ -146,7 +148,7 @@ export const TableCustomer = styled.ul`
   li {
     display: grid;
     align-items: center;
-    grid-template-columns: 1fr 3fr 2fr 1fr 2fr 2fr 60px;
+    grid-template-columns: 80px 3fr 2fr 1fr 1fr 2fr 2fr 60px;
     border-radius: 4px;
     border-bottom: 1px solid #ddd;
     padding: 10px;
@@ -157,6 +159,13 @@ export const TableCustomer = styled.ul`
 
       strong {
         margin-left: 10px;
+      }
+
+      span {
+        font-size: 12;
+        color: '#8bc53d';
+        font-weight: bold;
+        margin-left: 3px;
       }
     }
   }
