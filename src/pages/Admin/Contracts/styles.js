@@ -5,6 +5,7 @@ import { lighten } from 'polished';
 export const Container = styled.div`
   background: #eee;
   width: 100%;
+  min-width: 1100px;
   height: 100%;
   padding: 50px 25px 25px;
   overflow: auto;
@@ -15,6 +16,7 @@ export const Content = styled.div`
   border-radius: 4px;
   padding: 20px;
   margin-top: 20px;
+  min-width: 600px;
   min-height: 85vh;
   display: flex;
   flex-direction: column;
@@ -51,6 +53,18 @@ export const Catalog = styled.div`
   margin: auto;
 
   margin-top: 20px;
+
+  @media (max-width: 1300px) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-row-gap: 30px;
+  }
+
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-row-gap: 30px;
+  }
 `;
 
 export const ContractButton = styled.button`
@@ -60,6 +74,7 @@ export const ContractButton = styled.button`
   border: 1px solid #ddd;
   border-radius: 4px;
   background: ${lighten(0.1, '#ddd')};
+  max-width: 500px;
 
   div.box-top {
     height: 550px;

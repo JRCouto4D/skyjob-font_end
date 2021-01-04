@@ -50,40 +50,81 @@ export const Content = styled.div`
     div.box-buttons {
       margin-left: 360px;
       display: flex;
+      justify-content: space-between;
       align-items: center;
 
-      button.cancel-button {
-        border: 1px solid #ddd;
-        border-radius: 3px;
-        background: #fff;
+      button.cancel-contract-button {
+        background: #ff1e40;
         height: 35px;
-        padding: 0 15px;
-        color: #666;
-        margin-left: 1px;
-        transition: 0.2s;
-
-        :hover {
-          background: ${darken(0.03, '#fff')};
-        }
-      }
-
-      button.submit-button {
-        background: #40e0d0;
-        height: 35px;
-        min-width: 90px;
-        padding: 0 15px;
+        width: 180px;
         border: none;
         border-radius: 3px;
         margin-left: 10px;
         transition: 0.2s;
 
         :hover {
-          background: ${darken(0.1, '#40e0d0')};
+          background: ${darken(0.09, '#FF1E40')};
         }
 
         strong {
           color: #fff;
           font-weight: normal;
+        }
+      }
+
+      button.new-contract-button {
+        background: #8bc53d;
+        height: 35px;
+        width: 180px;
+        border: none;
+        border-radius: 3px;
+        margin-left: 10px;
+        transition: 0.2s;
+
+        :hover {
+          background: ${darken(0.03, '#8bc53d')};
+        }
+
+        strong {
+          color: #fff;
+          font-weight: normal;
+        }
+      }
+
+      div.box-buttons-left {
+        button.cancel-button {
+          border: 1px solid #ddd;
+          border-radius: 3px;
+          background: #fff;
+          height: 35px;
+          padding: 0 15px;
+          color: #666;
+          margin-left: 1px;
+          transition: 0.2s;
+
+          :hover {
+            background: ${darken(0.03, '#fff')};
+          }
+        }
+
+        button.submit-button {
+          background: #40e0d0;
+          height: 35px;
+          min-width: 90px;
+          padding: 0 15px;
+          border: none;
+          border-radius: 3px;
+          margin-left: 10px;
+          transition: 0.2s;
+
+          :hover {
+            background: ${darken(0.1, '#40e0d0')};
+          }
+
+          strong {
+            color: #fff;
+            font-weight: normal;
+          }
         }
       }
     }

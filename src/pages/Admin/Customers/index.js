@@ -7,6 +7,8 @@ import {
   MdSearch,
   MdEdit,
   MdDeleteForever,
+  MdCheckCircle,
+  MdError,
 } from 'react-icons/md';
 import { FaSpinner } from 'react-icons/fa';
 import { Input } from '@rocketseat/unform';
@@ -132,7 +134,58 @@ function Customers() {
                 : customer.email
               : ''}
           </span>
-          <span>{customer.access ? 'OK' : 'RESTRITO'}</span>
+          <span>
+            {customer.access ? (
+              <div className="box-description">
+                <MdCheckCircle size={18} color="#8bc53d" />
+                <span
+                  style={{
+                    color: '#8bc53d',
+                  }}
+                >
+                  ativo
+                </span>
+              </div>
+            ) : (
+              <div className="box-description">
+                <MdError size={18} color="#FF1E40" />
+                <span
+                  style={{
+                    color: '#FF1E40',
+                  }}
+                >
+                  restrito
+                </span>
+              </div>
+            )}
+          </span>
+
+          <span>
+            {customer.contract && customer.contract.status ? (
+              <div className="box-description">
+                <MdCheckCircle size={18} color="#8bc53d" />
+                <span
+                  style={{
+                    color: '#8bc53d',
+                  }}
+                >
+                  ativo
+                </span>
+              </div>
+            ) : (
+              <div className="box-description">
+                <MdError size={18} color="#FF1E40" />
+                <span
+                  style={{
+                    color: '#FF1E40',
+                  }}
+                >
+                  restrito
+                </span>
+              </div>
+            )}
+          </span>
+
           <span>
             {customer.contract
               ? format(
@@ -241,6 +294,7 @@ function Customers() {
             <strong>NOME</strong>
             <strong>EMAIL</strong>
             <strong>ACESSO</strong>
+            <strong>CONTRATO</strong>
             <strong>INÍCIO DO CONTRATO</strong>
             <strong>FIM DO CONTRATO</strong>
             <strong>AÇÕES</strong>

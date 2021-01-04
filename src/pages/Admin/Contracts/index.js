@@ -25,9 +25,7 @@ function Contracts() {
         <Catalog>
           <ContractButton
             type="button"
-            onClick={() =>
-              history.push('/contracts/form', { contract: { type: 1 } })
-            }
+            onClick={() => history.push('/contracts/form')}
             className="box-contract"
             poupColor="#40e0d0"
           >
