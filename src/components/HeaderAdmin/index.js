@@ -20,12 +20,10 @@ function HeaderAdmin() {
   useMemo(() => {
     if (viewMenu) {
       setAnimation(1);
-      console.tron.log(animation);
     } else {
       setAnimation(2);
-      console.tron.log(animation);
     }
-  }, [viewMenu, animation]);
+  }, [viewMenu]);
 
   const renderMenu = useMemo(
     () => (

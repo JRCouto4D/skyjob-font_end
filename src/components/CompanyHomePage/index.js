@@ -12,6 +12,7 @@ import {
   isBefore,
 } from 'date-fns';
 import pt from 'date-fns/locale/pt';
+import { toast } from 'react-toastify';
 
 import low from '../../assets/low.png';
 import up from '../../assets/up.png';
@@ -65,22 +66,30 @@ function CompanyHomePage() {
 
   useEffect(() => {
     async function loadItens() {
-      setLoading(true);
+      try {
+        if (company) {
+          setLoading(true);
 
-      const response = await api.get(`company/${company.id}/products`);
+          const response = await api.get(`company/${company.id}/products`);
 
-      const { total, products } = response.data;
-      setTotalItens(total);
+          const { total, products } = response.data;
+          setTotalItens(total);
 
-      const lowstk = products.filter(
-        (product) => product.amount_stock <= product.minimum_stock
-      );
-      setLowStock(lowstk.length);
+          const lowstk = products.filter(
+            (product) => product.amount_stock <= product.minimum_stock
+          );
+          setLowStock(lowstk.length);
 
-      const activepdt = products.filter((product) => product.active);
-      setActiveProduct(activepdt.length);
+          const activepdt = products.filter((product) => product.active);
+          setActiveProduct(activepdt.length);
 
-      setLoading(false);
+          setLoading(false);
+        }
+      } catch (err) {
+        toast.error(
+          'Algo deu errado e não foi possível carregar a lista de itens'
+        );
+      }
     }
 
     async function loadDataSale() {
@@ -250,6 +259,12 @@ function CompanyHomePage() {
         const monthSales = sales.filter((sale) =>
           isThisMonth(parseISO(sale.complete_at))
         );
+
+        if (monthSales.length <= 0) {
+          setNegativeBillingDay(false);
+          setAverageBillingDay('0%');
+          return;
+        }
 
         /* calculate average sales per day this month */
 
