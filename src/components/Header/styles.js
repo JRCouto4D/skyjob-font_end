@@ -24,7 +24,7 @@ export const Container = styled.div`
       width: 150px;
     }
 
-    nav {
+    > nav {
       max-width: 500px;
       min-width: 400px;
       margin-left: 50px;

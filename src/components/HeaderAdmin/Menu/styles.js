@@ -54,13 +54,13 @@ export const Content = styled.div`
 
   div.box-topo {
     width: 100%;
-    margin-top: -30px;
+    margin-top: -20px;
     div.box-user {
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      width: 100%;
+      width: 85%;
       margin-left: -10px;
 
       div.box-info {
