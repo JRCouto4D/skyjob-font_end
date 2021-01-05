@@ -10,6 +10,7 @@ import Customers from '../pages/Catalog/Customers';
 import Products from '../pages/Catalog/Products';
 import Providers from '../pages/Catalog/Providers';
 import Employees from '../pages/Catalog/Employees';
+import EmployeeForm from '../pages/Catalog/Employees/EmployeeForm';
 import NewProduct from '../pages/Catalog/Products/NewProduct';
 import NewCategory from '../pages/Catalog/Categories/NewCategory';
 import NewProviders from '../pages/Catalog/Providers/NewProviders';
@@ -67,6 +68,7 @@ export default function Routes() {
         isPrivate
       />
       <Route path="/employees" exact component={Employees} isPrivate />
+      <Route path="/employees/form" exact component={EmployeeForm} isPrivate />
 
       <Route path="/budgets" exact component={Budgets} isPrivate />
       <Route
