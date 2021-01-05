@@ -163,6 +163,18 @@ function Header() {
             </Link>
             <MdAddCircleOutline color="#fff" size={25} />
           </li>
+          <li>
+            <Link
+              onClick={() => {
+                close();
+                handleSetColor(2);
+              }}
+              to="/employees"
+            >
+              FUNCIONÁRIOS
+            </Link>
+            <MdAddCircleOutline color="#fff" size={25} />
+          </li>
         </BoxCatalog>
 
         <BoxSales visible={popup2} coords={coords}>
