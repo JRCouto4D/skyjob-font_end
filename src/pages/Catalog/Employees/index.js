@@ -188,10 +188,7 @@ function Employees() {
         </Header>
 
         <NewSearch>
-          <button
-            type="button"
-            onClick={() => history.push('/admin/customers/form')}
-          >
+          <button type="button" onClick={() => history.push('/employees/form')}>
             <MdAdd color="#fff" size={20} />
             <strong>NOVO REGISTRO</strong>
           </button>
